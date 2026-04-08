@@ -1,0 +1,10 @@
+{
+  "id": "JJwbaDlUsng3ssVZF3Eto7h5Nfi1",
+  "name": "Admin User",
+  "email": "admin@gmail.com",
+  "role": "super_admin",
+  "permissions": [],
+  "isActive": true,
+  "createdAt": "2026-04-07T14:29:49.311Z",
+  "lastLoginAt": "2026-04-07T14:29:49.312Z"
+}
