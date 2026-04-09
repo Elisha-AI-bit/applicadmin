@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
-import { mockApi } from '@/lib/api';
+import { firebaseApi } from '@/lib/firebaseApi';
+import { useRealtimeDocument } from '@/hooks/useRealtimeQuery';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -13,14 +13,10 @@ import { formatDate, formatCurrency, getStatusColor } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
   ArrowLeft,
-  CreditCard,
-  DollarSign,
-  Calendar,
   User,
   FileText,
   RefreshCw,
   CheckCircle,
-  AlertCircle,
 } from 'lucide-react';
 
 export function PaymentDetail() {
@@ -30,16 +26,11 @@ export function PaymentDetail() {
   const [refundReason, setRefundReason] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const { data: payment, isLoading } = useQuery({
-    queryKey: ['payment', id],
-    queryFn: () => mockApi.getPayment(id!),
-    enabled: !!id,
-  });
+  const { data: payment, isLoading } = useRealtimeDocument('payments', id!);
 
   const refundMutation = useMutation({
-    mutationFn: (reason: string) => mockApi.processRefund(id!, reason),
+    mutationFn: (reason: string) => firebaseApi.payments.processRefund(id!, reason),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['payment', id] });
       queryClient.invalidateQueries({ queryKey: ['payments'] });
       toast.success('Refund processed successfully');
       setIsDialogOpen(false);

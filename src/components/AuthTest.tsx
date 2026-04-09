@@ -16,7 +16,6 @@ export const AuthTest: React.FC = () => {
     user, 
     isAuthenticated, 
     isLoading, 
-    error, 
     userFriendlyError,
     login, 
     register, 

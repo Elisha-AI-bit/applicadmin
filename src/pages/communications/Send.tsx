@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { mockApi } from '@/lib/api';
+import { firebaseApi } from '@/lib/firebaseApi';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -14,10 +14,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
-import { ArrowLeft, Send, Users, Mail, MessageSquare, Bell } from 'lucide-react';
+import { ArrowLeft, Send, Mail, MessageSquare, Bell } from 'lucide-react';
 
 export function SendNotification() {
   const navigate = useNavigate();
@@ -28,9 +27,11 @@ export function SendNotification() {
   const [type, setType] = useState<'email' | 'sms' | 'push'>('email');
   const [isSending, setIsSending] = useState(false);
 
+  const [recipientType, setRecipientType] = useState('all');
+
   const { data: templates } = useQuery({
     queryKey: ['templates'],
-    queryFn: mockApi.getTemplates,
+    queryFn: firebaseApi.notifications.getTemplates,
   });
 
   const handleTemplateChange = (templateId: string) => {
@@ -45,11 +46,27 @@ export function SendNotification() {
 
   const handleSend = async () => {
     setIsSending(true);
-    // Simulate sending
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    toast.success('Notification sent successfully');
-    setIsSending(false);
-    navigate('/communications');
+    try {
+      const recipientList = recipientType === 'custom' 
+        ? recipients.split(',').map(s => s.trim()).filter(Boolean)
+        : [recipientType]; // 'all', 'pending', etc. handled by backend logic
+
+      await firebaseApi.notifications.sendNotification({
+        title: subject || 'New Notification',
+        message: message,
+        type: type,
+        recipients: recipientList,
+        status: 'sent',
+        createdBy: 'Admin Assistant'
+      });
+
+      toast.success('Notification logged and queued for sending');
+      navigate('/communications');
+    } catch (error) {
+      toast.error('Failed to send notification');
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -157,7 +174,7 @@ export function SendNotification() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label>Recipient Type</Label>
-                <Select defaultValue="all">
+                <Select value={recipientType} onValueChange={setRecipientType}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>

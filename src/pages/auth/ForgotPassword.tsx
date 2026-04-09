@@ -43,12 +43,12 @@ export function ForgotPassword() {
                 If an account exists with {email}, you will receive a password reset link shortly.
               </AlertDescription>
             </Alert>
-            <Button asChild variant="outline" className="w-full">
-              <Link to="/auth/login">
+            <Link to="/auth/login" className="w-full">
+              <Button variant="outline" className="w-full">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to login
-              </Link>
-            </Button>
+              </Button>
+            </Link>
           </CardContent>
         ) : (
           <form onSubmit={handleSubmit}>
@@ -72,12 +72,12 @@ export function ForgotPassword() {
                 ) : null}
                 Send reset link
               </Button>
-              <Button asChild variant="ghost" className="w-full">
-                <Link to="/auth/login">
+              <Link to="/auth/login" className="w-full">
+                <Button variant="ghost" className="w-full">
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Back to login
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             </CardFooter>
           </form>
         )}

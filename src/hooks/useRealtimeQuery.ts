@@ -192,12 +192,12 @@ export function useRealtimeQuery<T = any>({
       } else {
         // Get collection
         const collectionRef = collection(db, collectionName);
-        let q = collectionRef;
+        let q: any = collectionRef;
         if (constraints.length > 0) {
           q = query(collectionRef, ...constraints);
         }
         const querySnapshot = await getDocs(q);
-        return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as T[];
+        return querySnapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as any) })) as T[];
       }
     },
     enabled,
@@ -231,13 +231,13 @@ export function useRealtimeQuery<T = any>({
       } else {
         // Subscribe to collection
         const collectionRef = collection(db, collectionName);
-        let q = collectionRef;
+        let q: any = collectionRef;
         if (constraints.length > 0) {
           q = query(collectionRef, ...constraints);
         }
         
         unsubscribe = onSnapshot(q, (querySnapshot) => {
-          const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as T[];
+          const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as any) })) as T[];
           queryClient.setQueryData(queryKey, data);
           setIsRealtimeConnected(true);
         }, (error) => {
@@ -321,6 +321,25 @@ export function useRealtimePayments(filters?: {
   return useRealtimeQuery<any[]>({
     queryKey: ['payments', filters],
     collectionName: 'payments',
+    constraints,
+  });
+}
+
+export function useRealtimePrograms(filters?: {
+  status?: string;
+  schoolId?: string;
+}) {
+  const constraints = [];
+  if (filters?.status) {
+    constraints.push(where('status', '==', filters.status));
+  }
+  if (filters?.schoolId) {
+    constraints.push(where('schoolId', '==', filters.schoolId));
+  }
+
+  return useRealtimeQuery<any[]>({
+    queryKey: ['programs', filters],
+    collectionName: 'programs',
     constraints,
   });
 }

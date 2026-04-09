@@ -5,7 +5,7 @@ import { mockApi } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   Table,
@@ -15,8 +15,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { formatDate, getInitials, getStatusColor } from '@/lib/utils';
-import { Search, Plus, Eye, Edit2, UserCog, Shield, User, Mail } from 'lucide-react';
+import { formatDate, getInitials } from '@/lib/utils';
+import { Search, Plus, Edit2 } from 'lucide-react';
 
 export function UsersList() {
   const navigate = useNavigate();

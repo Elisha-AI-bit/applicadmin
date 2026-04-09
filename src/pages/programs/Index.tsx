@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { firebaseApi } from '@/lib/firebaseApi';
+import { useRealtimePrograms, useRealtimeSchools } from '@/hooks/useRealtimeQuery';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -14,15 +13,8 @@ export function ProgramsList() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
 
-  const { data: programs = [], isLoading } = useQuery({
-    queryKey: ['programs'],
-    queryFn: () => firebaseApi.programs.getPrograms(),
-  });
-
-  const { data: schools = [] } = useQuery({
-    queryKey: ['schools'],
-    queryFn: () => firebaseApi.schools.getSchools(),
-  });
+  const { data: programs = [], isLoading } = useRealtimePrograms();
+  const { data: schools = [] } = useRealtimeSchools();
 
   const schoolNameById = useMemo(() => {
     return (schools as School[]).reduce<Record<string, string>>((acc, school) => {

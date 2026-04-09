@@ -124,13 +124,13 @@ export const getDocuments = async (collectionName: string, constraints?: any[]) 
   try {
     const collectionRef = collection(db, collectionName);
     
-    let q = collectionRef;
+    let q: any = collectionRef;
     if (constraints && constraints.length > 0) {
       q = query(collectionRef, ...constraints);
     }
     
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as any) }));
   } catch (error) {
     console.error("Error getting documents:", error);
     throw error;
@@ -145,7 +145,7 @@ export const queryDocuments = async (
 ) => {
   try {
     const collectionRef = collection(db, collectionName);
-    let q = query(
+    let q: any = query(
       collectionRef,
       where(whereClause.field, whereClause.operator as any, whereClause.value)
     );
@@ -159,7 +159,7 @@ export const queryDocuments = async (
     }
     
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as any) }));
   } catch (error) {
     console.error("Error querying documents:", error);
     throw error;
@@ -174,7 +174,7 @@ export const subscribeToCollection = (
 ) => {
   const collectionRef = collection(db, collectionName);
   
-  let q = collectionRef;
+  let q: any = collectionRef;
   if (constraints && constraints.length > 0) {
     q = query(collectionRef, ...constraints);
   }

@@ -32,7 +32,6 @@ export function CreateUser() {
       mockApi.createUser({
         ...formData,
         permissions: [],
-        createdAt: new Date().toISOString(),
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });

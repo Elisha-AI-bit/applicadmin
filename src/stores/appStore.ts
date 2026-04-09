@@ -34,7 +34,7 @@ interface AppState {
   syncNotifications: () => void
 }
 
-export const useAppStore = create<AppState>((set, get) => ({
+export const useAppStore = create<AppState>((set) => ({
   notifications: [],
   sidebarOpen: true,
   theme: 'light',

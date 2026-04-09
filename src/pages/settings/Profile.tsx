@@ -15,7 +15,7 @@ export function ProfileSettings() {
   const { user } = useAuthStore();
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
-    name: user?.name || '',
+    name: user ? `${user.firstName} ${user.lastName}` : '',
     email: user?.email || '',
     phone: '',
     bio: '',
@@ -82,8 +82,8 @@ export function ProfileSettings() {
           </CardHeader>
           <CardContent className="flex flex-col items-center">
             <Avatar className="h-24 w-24">
-              <AvatarImage src={user?.avatarUrl} />
-              <AvatarFallback className="text-2xl">{user ? getInitials(user.name) : '?'}</AvatarFallback>
+              <AvatarImage src={user?.avatar} />
+              <AvatarFallback className="text-2xl">{user ? getInitials(user.firstName, user.lastName) : '?'}</AvatarFallback>
             </Avatar>
             <Button variant="outline" className="mt-4" size="sm">
               <Camera className="mr-2 h-4 w-4" />

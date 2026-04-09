@@ -1,6 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
-import { firebaseApi } from '@/lib/firebaseApi';
+import { useRealtimeDocument, useRealtimePrograms } from '@/hooks/useRealtimeQuery';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -10,22 +9,17 @@ import {
   ArrowLeft,
   Edit,
   GraduationCap,
+  Plus,
 } from 'lucide-react';
 
 export function SchoolDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { data: school, isLoading } = useQuery({
-    queryKey: ['school', id],
-    queryFn: () => firebaseApi.schools.getSchool(id!),
-    enabled: !!id,
-  });
+  const { data: school, isLoading } = useRealtimeDocument('schools', id!);
 
-  const { data: programs } = useQuery({
-    queryKey: ['programs', school?.school_id],
-    queryFn: () => firebaseApi.programs.getPrograms(school?.school_id),
-    enabled: !!school?.school_id,
+  const { data: programs } = useRealtimePrograms({ 
+    schoolId: school?.school_id 
   });
 
   if (isLoading) {
@@ -91,9 +85,15 @@ export function SchoolDetail() {
 
             <TabsContent value="programs">
               <Card>
-                <CardHeader>
-                  <CardTitle>Programs</CardTitle>
-                  <CardDescription>{programs?.length || 0} programs available</CardDescription>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle>Programs</CardTitle>
+                    <CardDescription>{programs?.length || 0} programs available in this school</CardDescription>
+                  </div>
+                  <Button size="sm" onClick={() => navigate(`/programs/new?schoolId=${school.school_id}`)}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    New Program
+                  </Button>
                 </CardHeader>
                 <CardContent>
                   {programs?.length === 0 ? (

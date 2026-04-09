@@ -1,11 +1,9 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { useNavigate } from 'react-router-dom';
-import { User, Shield, Bell, Globe, Palette, ChevronRight } from 'lucide-react';
+import { User, Shield, Bell, Globe, ChevronRight } from 'lucide-react';
 
 export function Settings() {
   const navigate = useNavigate();

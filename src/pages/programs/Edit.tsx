@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { firebaseApi } from '@/lib/firebaseApi';
 import { Button } from '@/components/ui/button';
@@ -22,6 +22,8 @@ export function ProgramEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [searchParams] = useSearchParams();
+  const schoolIdParam = searchParams.get('schoolId');
   const isEditing = !!id;
 
   const { data: existingProgram } = useQuery({
@@ -36,17 +38,37 @@ export function ProgramEdit() {
   });
 
   const [formData, setFormData] = useState({
-    school_id: existingProgram?.school_id || '',
-    program_name: existingProgram?.program_name || '',
-    program_code: existingProgram?.program_code || '',
-    qualification_type: existingProgram?.qualification_type || 'Degree',
-    duration_years: existingProgram?.duration_years?.toString() || '4',
-    total_semesters: existingProgram?.total_semesters?.toString() || '8',
-    entry_requirements: existingProgram?.entry_requirements || '',
-    description: existingProgram?.description || '',
-    status: existingProgram?.status || 'draft',
-    isActive: existingProgram?.isActive ?? true,
+    school_id: '',
+    program_name: '',
+    program_code: '',
+    qualification_type: 'Degree',
+    duration_years: '4',
+    total_semesters: '8',
+    entry_requirements: '',
+    description: '',
+    status: 'draft',
+    isActive: true,
   });
+
+  // Update form data when existing program is loaded
+  useEffect(() => {
+    if (existingProgram) {
+      setFormData({
+        school_id: existingProgram.school_id || '',
+        program_name: existingProgram.program_name || '',
+        program_code: existingProgram.program_code || '',
+        qualification_type: (existingProgram.qualification_type as any) || 'Degree',
+        duration_years: existingProgram.duration_years?.toString() || '4',
+        total_semesters: existingProgram.total_semesters?.toString() || '8',
+        entry_requirements: existingProgram.entry_requirements || '',
+        description: existingProgram.description || '',
+        status: existingProgram.status || 'draft',
+        isActive: existingProgram.isActive ?? true,
+      });
+    } else if (schoolIdParam) {
+      setFormData(prev => ({ ...prev, school_id: schoolIdParam }));
+    }
+  }, [existingProgram, schoolIdParam]);
 
   const mutation = useMutation({
     mutationFn: async () => {
@@ -154,7 +176,7 @@ export function ProgramEdit() {
                 <Label htmlFor="qualification_type">Qualification Type *</Label>
                 <Select
                   value={formData.qualification_type}
-                  onValueChange={(value) => setFormData({ ...formData, qualification_type: value })}
+                  onValueChange={(value) => setFormData({ ...formData, qualification_type: value as 'Degree' | 'Diploma' | 'Certificate' })}
                 >
                   <SelectTrigger>
                     <SelectValue />

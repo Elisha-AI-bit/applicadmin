@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRealtimeApplications } from '@/hooks/useRealtimeQuery';
 import { Button } from '@/components/ui/button';
@@ -21,8 +21,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { formatDate, getStatusColor } from '@/lib/utils';
-import { Search, Filter, Download, Eye, CheckCircle, XCircle, Clock } from 'lucide-react';
-import type { Application } from '@/types';
+import { Search, Filter, Download, Eye } from 'lucide-react';
 
 const statusOptions = [
   { value: 'all', label: 'All Status' },
@@ -44,11 +43,23 @@ export function ApplicationsList() {
   );
 
   // Filter applications based on search query (client-side filtering for demo)
-  const filteredApplications = applications.filter(app =>
-    app.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    app.studentEmail.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    app.schoolName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredApplications = applications.filter(app => {
+    const firstName = app.personalInfo?.firstName?.toLowerCase() || '';
+    const lastName = app.personalInfo?.lastName?.toLowerCase() || '';
+    const email = app.contactInfo?.email?.toLowerCase() || '';
+    const school = app.programmeChoice?.faculty?.toLowerCase() || '';
+    const program = app.programmeChoice?.programmeName?.toLowerCase() || '';
+    const query = searchQuery.toLowerCase();
+
+    return (
+      firstName.includes(query) ||
+      lastName.includes(query) ||
+      email.includes(query) ||
+      school.includes(query) ||
+      program.includes(query) ||
+      app.applicationId.toLowerCase().includes(query)
+    );
+  });
 
   const getPaymentBadgeColor = (status: string) => {
     const colors: Record<string, string> = {
@@ -137,14 +148,15 @@ export function ApplicationsList() {
                 <TableRow key={app.id}>
                   <TableCell>
                     <div>
-                      <p className="font-medium">{app.studentName}</p>
-                      <p className="text-sm text-muted-foreground">{app.studentEmail}</p>
+                      <p className="font-medium">{app.personalInfo?.firstName} {app.personalInfo?.lastName}</p>
+                      <p className="text-sm text-muted-foreground">{app.contactInfo?.email}</p>
+                      <p className="text-xs text-primary font-mono font-bold mt-1">#{app.applicationId}</p>
                     </div>
                   </TableCell>
                   <TableCell>
                     <div>
-                      <p className="font-medium">{app.schoolName}</p>
-                      <p className="text-sm text-muted-foreground">{app.programName}</p>
+                      <p className="font-medium">{app.programmeChoice?.faculty}</p>
+                      <p className="text-sm text-muted-foreground">{app.programmeChoice?.programmeName}</p>
                     </div>
                   </TableCell>
                   <TableCell>

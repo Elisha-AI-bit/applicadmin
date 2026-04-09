@@ -1,4 +1,4 @@
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth, db } from './firebase';
 
@@ -135,7 +135,7 @@ export const createAdminUsers = async (admins: Array<{
 };
 
 // Check if user exists and is admin
-export const checkAdminExists = async (email: string): Promise<boolean> => {
+export const checkAdminExists = async (_email: string): Promise<boolean> => {
   try {
     // This would typically require a custom function or cloud function
     // For now, we'll return false and let the creation handle duplicates

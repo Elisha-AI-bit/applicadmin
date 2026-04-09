@@ -110,12 +110,12 @@ export function ResetPassword() {
                 ) : null}
                 Reset password
               </Button>
-              <Button asChild variant="ghost" className="w-full">
-                <Link to="/auth/login">
+              <Link to="/auth/login" className="w-full">
+                <Button variant="ghost" className="w-full">
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Back to login
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             </CardFooter>
           </form>
         )}

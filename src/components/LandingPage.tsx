@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { 
   GraduationCap, 
   Users, 
@@ -8,10 +7,7 @@ import {
   Shield, 
   Clock,
   CheckCircle,
-  ArrowRight,
-  BookOpen,
-  Award,
-  Target
+  ArrowRight
 } from 'lucide-react'
 
 const LandingPage = () => {

@@ -1,19 +1,5 @@
 // Firebase data models for the application
 
-export interface Address {
-  street: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  country: string;
-}
-
-export interface Contact {
-  email: string;
-  phone: string;
-  website: string;
-}
-
 export interface FirestoreSync {
   syncStatus: 'synced' | 'pending' | 'error';
   lastSyncedAt?: string;
@@ -52,33 +38,77 @@ export interface Program {
   createdBy: string;
 }
 
-export interface GuardianInfo {
-  name: string;
-  relationship: string;
-  phone: string;
-  email: string;
+export interface PersonalInfo {
+  firstName?: string;
+  lastName?: string;
+  dob?: string;
+  gender?: string;
+  nationality?: string;
+  nrcPassport?: string;
+  maritalStatus?: string;
 }
 
-export interface AcademicHistory {
-  institution: string;
-  degree: string;
-  fieldOfStudy: string;
-  graduationYear: number;
-  gpa: number;
+export interface ContactInfo {
+  phoneNumber?: string;
+  email?: string;
+  address?: string;
+  city?: string;
+  province?: string;
+  country?: string;
+}
+
+export interface SubjectGrade {
+  subject?: string;
+  grade?: string;
+}
+
+export interface AcademicInfo {
+  schoolName?: string;
+  examLevel?: string;
+  completionYear?: string;
+  certificateNumber?: string;
+  grades?: SubjectGrade[];
+}
+
+export interface ProgrammeChoice {
+  faculty?: string;
+  programmeName?: string;
+  modeOfStudy?: string;
+  intake?: string;
 }
 
 export interface Student {
   id: string;
   firstName: string;
   lastName: string;
+  fullName?: string;
   email: string;
   phone: string;
+  phoneNumber?: string;
+  gender: string;
   dateOfBirth: string;
-  gender: 'male' | 'female' | 'other';
-  address: Address;
-  guardianInfo: GuardianInfo;
-  academicHistory: AcademicHistory[];
-  applications: string[]; // Array of application IDs
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country?: string;
+  };
+  applications: string[];
+  academicHistory: Array<{
+    institution: string;
+    degree: string;
+    fieldOfStudy: string;
+    gpa: string | number;
+    graduationYear: string | number;
+  }>;
+  guardianInfo?: {
+    name: string;
+    relationship: string;
+    phone: string;
+    email: string;
+  };
+  role?: 'student';
   createdAt: string;
   lastLoginAt?: string;
 }
@@ -88,6 +118,7 @@ export interface ApplicationDocument {
   name: string;
   type: string;
   url: string;
+  verified?: boolean;
   uploadedAt: string;
 }
 
@@ -101,14 +132,20 @@ export interface ApplicationNote {
 
 export interface Application {
   id: string;
-  studentId: string;
-  studentName: string;
-  studentEmail: string;
-  studentPhone: string;
-  schoolId: string;
-  schoolName: string;
-  programId: string;
-  programName: string;
+  userId?: string;
+  applicationId?: string;
+  studentName?: string;
+  studentEmail?: string;
+  studentPhone?: string;
+  schoolName?: string;
+  schoolId?: string;
+  studentId?: string;
+  programId?: string;
+  programName?: string;
+  personalInfo?: PersonalInfo;
+  contactInfo?: ContactInfo;
+  academicInfo?: AcademicInfo;
+  programmeChoice?: ProgrammeChoice;
   status: 'pending' | 'under_review' | 'approved' | 'rejected' | 'waitlisted' | 'withdrawn';
   paymentStatus: 'pending' | 'completed' | 'failed' | 'refunded';
   paymentAmount: number;
@@ -127,7 +164,7 @@ export interface Payment {
   studentName: string;
   amount: number;
   currency: string;
-  method: 'credit_card' | 'mobile_money' | 'bank_transfer' | 'paypal';
+  method: 'credit_card' | 'mobile_money' | 'bank_transfer' | 'paypal' | 'cash';
   status: 'pending' | 'completed' | 'failed' | 'refunded';
   transactionId?: string;
   paidAt?: string;

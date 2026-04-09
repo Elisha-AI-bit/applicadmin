@@ -5,8 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, Key, Shield, AlertTriangle, Save, Loader2, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeft, Key, Shield, AlertTriangle, Loader2, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 
 export function SecuritySettings() {

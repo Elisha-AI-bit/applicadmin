@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRealtimeStudents } from '@/hooks/useRealtimeQuery';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -15,7 +15,6 @@ import {
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { formatDate, getInitials } from '@/lib/utils';
 import { Search, Plus, Upload, Eye, Mail, Phone } from 'lucide-react';
-import type { Student } from '@/types';
 
 export function StudentsList() {
   const navigate = useNavigate();

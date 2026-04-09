@@ -4,8 +4,7 @@ import {
   signOut,
   onAuthStateChanged,
   updateProfile,
-  sendPasswordResetEmail,
-  AuthErrorCodes
+  sendPasswordResetEmail
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from './firebase';

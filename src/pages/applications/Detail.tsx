@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
-import { mockApi } from '@/lib/api';
+import { firebaseApi } from '@/lib/firebaseApi';
+import { useRealtimeDocument } from '@/hooks/useRealtimeQuery';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
@@ -13,18 +14,16 @@ import { formatDate, formatCurrency, getStatusColor } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
   ArrowLeft,
-  User,
-  School,
-  CreditCard,
   FileText,
-  MessageSquare,
   CheckCircle,
   XCircle,
   Clock,
   Send,
   Download,
-  AlertCircle,
   Check,
+  MapPin,
+  GraduationCap,
+  ShieldCheck,
 } from 'lucide-react';
 
 export function ApplicationDetail() {
@@ -33,17 +32,12 @@ export function ApplicationDetail() {
   const queryClient = useQueryClient();
   const [note, setNote] = useState('');
 
-  const { data: application, isLoading } = useQuery({
-    queryKey: ['application', id],
-    queryFn: () => mockApi.getApplication(id!),
-    enabled: !!id,
-  });
+  const { data: application, isLoading } = useRealtimeDocument('applications', id!);
 
   const updateStatusMutation = useMutation({
     mutationFn: ({ status, note }: { status: string; note?: string }) =>
-      mockApi.updateApplicationStatus(id!, status as any, note),
+      firebaseApi.applications.updateApplicationStatus(id!, status as any, note),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['application', id] });
       queryClient.invalidateQueries({ queryKey: ['applications'] });
       toast.success('Application status updated');
     },
@@ -53,11 +47,18 @@ export function ApplicationDetail() {
   });
 
   const addNoteMutation = useMutation({
-    mutationFn: (content: string) => mockApi.addApplicationNote(id!, content),
+    mutationFn: (content: string) => firebaseApi.applications.addApplicationNote(id!, content),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['application', id] });
       setNote('');
       toast.success('Note added');
+    },
+  });
+
+  const verifyDocMutation = useMutation({
+    mutationFn: ({ docId, verified }: { docId: string; verified: boolean }) =>
+      firebaseApi.applications.verifyDocument(id!, docId, verified),
+    onSuccess: () => {
+      toast.success('Document verification updated');
     },
   });
 
@@ -139,57 +140,88 @@ export function ApplicationDetail() {
             </TabsList>
 
             <TabsContent value="overview" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Student Information</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="space-y-1">
-                      <Label className="text-muted-foreground">Full Name</Label>
-                      <p className="font-medium">{application.studentName}</p>
+              <div className="grid gap-4 md:grid-cols-2">
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <CardTitle className="text-sm font-medium">Personal Information</CardTitle>
+                    <ShieldCheck className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Full Name</span>
+                      <span className="font-semibold">{application.personalInfo?.firstName} {application.personalInfo?.lastName}</span>
                     </div>
-                    <div className="space-y-1">
-                      <Label className="text-muted-foreground">Email</Label>
-                      <p className="font-medium">{application.studentEmail}</p>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Gender</span>
+                      <span className="font-semibold">{application.personalInfo?.gender}</span>
                     </div>
-                    <div className="space-y-1">
-                      <Label className="text-muted-foreground">Phone</Label>
-                      <p className="font-medium">{application.studentPhone}</p>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">ID / Passport</span>
+                      <span className="font-semibold">{application.personalInfo?.nrcPassport}</span>
                     </div>
-                    <div className="space-y-1">
-                      <Label className="text-muted-foreground">Source</Label>
-                      <p className="font-medium capitalize">{application.source.replace('_', ' ')}</p>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Nationality</span>
+                      <span className="font-semibold">{application.personalInfo?.nationality}</span>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Status</span>
+                      <span className="font-semibold">{application.personalInfo?.maritalStatus}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <CardTitle className="text-sm font-medium">Contact Details</CardTitle>
+                    <MapPin className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Email</span>
+                      <span className="font-semibold">{application.contactInfo?.email}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Phone</span>
+                      <span className="font-semibold">{application.contactInfo?.phoneNumber}</span>
+                    </div>
+                    <div className="space-y-1 mt-2 border-t pt-2">
+                      <span className="text-xs text-muted-foreground">Residential Address</span>
+                      <p className="text-sm font-medium">
+                        {application.contactInfo?.address}, {application.contactInfo?.city}, {application.contactInfo?.province}, {application.contactInfo?.country}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
 
               <Card>
-                <CardHeader>
-                  <CardTitle>Application Details</CardTitle>
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium">Academic History & Programme</CardTitle>
+                  <GraduationCap className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-1">
-                      <Label className="text-muted-foreground">School</Label>
-                      <p className="font-medium">{application.schoolName}</p>
+                      <Label className="text-xs text-muted-foreground">Selected Programme</Label>
+                      <p className="font-bold">{application.programmeChoice?.faculty} - {application.programmeChoice?.programmeName}</p>
+                      <p className="text-sm uppercase text-primary font-bold">{application.programmeChoice?.intake} Intake ({application.programmeChoice?.modeOfStudy})</p>
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-muted-foreground">Program</Label>
-                      <p className="font-medium">{application.programName}</p>
+                      <Label className="text-xs text-muted-foreground">Previous Institution</Label>
+                      <p className="font-medium text-sm">{application.academicInfo?.schoolName} ({application.academicInfo?.examLevel})</p>
+                      <p className="text-xs text-muted-foreground">Completed: {application.academicInfo?.completionYear} | Cert: {application.academicInfo?.certificateNumber}</p>
                     </div>
-                    <div className="space-y-1">
-                      <Label className="text-muted-foreground">Status</Label>
-                      <Badge className={getStatusColor(application.status)}>
-                        {application.status.replace('_', ' ')}
-                      </Badge>
-                    </div>
-                    <div className="space-y-1">
-                      <Label className="text-muted-foreground">Payment Status</Label>
-                      <Badge className={getStatusColor(application.paymentStatus)}>
-                        {application.paymentStatus}
-                      </Badge>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label className="text-xs text-muted-foreground">Subjects & Results</Label>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                      {application.academicInfo?.grades?.map((g: any, i: number) => (
+                        <div key={i} className="bg-muted/50 p-2 rounded flex justify-between items-center text-xs">
+                          <span className="font-medium truncate mr-1">{g.subject}</span>
+                          <Badge variant="outline" className="h-5 px-1 bg-white">{g.grade}</Badge>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </CardContent>
@@ -215,16 +247,28 @@ export function ApplicationDetail() {
                           <div className="flex items-center gap-3">
                             <FileText className="h-5 w-5 text-muted-foreground" />
                             <div>
-                              <p className="font-medium">{doc.name}</p>
+                              <p className="font-medium flex items-center gap-2">
+                                {doc.name}
+                                {doc.verified && <ShieldCheck className="h-4 w-4 text-green-500" />}
+                              </p>
                               <p className="text-sm text-muted-foreground">
                                 Uploaded {formatDate(doc.uploadedAt)}
                               </p>
                             </div>
                           </div>
-                          <Button variant="ghost" size="sm">
-                            <Download className="mr-2 h-4 w-4" />
-                            Download
-                          </Button>
+                          <div className="flex gap-2">
+                            <Button
+                              variant={doc.verified ? "secondary" : "outline"}
+                              size="sm"
+                              onClick={() => verifyDocMutation.mutate({ docId: doc.id, verified: !doc.verified })}
+                              disabled={verifyDocMutation.isPending}
+                            >
+                              {doc.verified ? 'Unverify' : 'Verify'}
+                            </Button>
+                            <Button variant="ghost" size="sm">
+                              <Download className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       ))}
                     </div>

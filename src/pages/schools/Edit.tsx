@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { firebaseApi } from '@/lib/firebaseApi';
@@ -28,12 +28,25 @@ export function SchoolEdit() {
   });
 
   const [formData, setFormData] = useState({
-    school_name: existingSchool?.school_name || '',
-    school_code: existingSchool?.school_code || '',
-    description: existingSchool?.description || '',
-    status: existingSchool?.status || 'draft',
-    isActive: existingSchool?.isActive ?? true,
+    school_name: '',
+    school_code: '',
+    description: '',
+    status: 'draft',
+    isActive: true,
   });
+
+  // Update form data when existing school is loaded
+  useEffect(() => {
+    if (existingSchool) {
+      setFormData({
+        school_name: existingSchool.school_name || '',
+        school_code: existingSchool.school_code || '',
+        description: existingSchool.description || '',
+        status: (existingSchool.status as any) || 'draft',
+        isActive: existingSchool.isActive ?? true,
+      });
+    }
+  }, [existingSchool]);
 
   const mutation = useMutation({
     mutationFn: async () => {

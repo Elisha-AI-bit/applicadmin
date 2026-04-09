@@ -51,7 +51,7 @@ const convertTimestamps = (obj: any): any => {
 export const schoolsApi = {
   getSchools: async (status?: string): Promise<School[]> => {
     const schoolsRef = collection(db, 'schools');
-    let q = schoolsRef;
+    let q: any = schoolsRef;
     
     if (status) {
       q = query(q, where('status', '==', status));
@@ -107,7 +107,7 @@ export const schoolsApi = {
 
   subscribeToSchools: (callback: (schools: School[]) => void, status?: string) => {
     const schoolsRef = collection(db, 'schools');
-    let q = schoolsRef;
+    let q: any = schoolsRef;
     
     if (status) {
       q = query(q, where('status', '==', status));
@@ -127,7 +127,7 @@ export const schoolsApi = {
 export const programsApi = {
   getPrograms: async (schoolId?: string): Promise<Program[]> => {
     const programsRef = collection(db, 'programs');
-    let q = programsRef;
+    let q: any = programsRef;
     
     if (schoolId) {
       q = query(q, where('school_id', '==', schoolId));
@@ -186,7 +186,7 @@ export const programsApi = {
 export const studentsApi = {
   getStudents: async (search?: string): Promise<Student[]> => {
     const studentsRef = collection(db, 'students');
-    let q = studentsRef;
+    let q: any = studentsRef;
     
     if (search) {
       q = query(q, 
@@ -204,7 +204,7 @@ export const studentsApi = {
 
   subscribeToStudents: (callback: (students: Student[]) => void, search?: string) => {
     const studentsRef = collection(db, 'students');
-    let q = studentsRef;
+    let q: any = studentsRef;
     
     if (search) {
       q = query(q, 
@@ -265,7 +265,7 @@ export const applicationsApi = {
     dateTo?: string;
   }): Promise<Application[]> => {
     const applicationsRef = collection(db, 'applications');
-    let q = applicationsRef;
+    let q: any = applicationsRef;
     
     if (filters?.status) {
       q = query(q, where('status', '==', filters.status));
@@ -286,7 +286,7 @@ export const applicationsApi = {
     schoolId?: string;
   }) => {
     const applicationsRef = collection(db, 'applications');
-    let q = applicationsRef;
+    let q: any = applicationsRef;
     
     if (filters?.status) {
       q = query(q, where('status', '==', filters.status));
@@ -319,22 +319,23 @@ export const applicationsApi = {
 
   updateApplicationStatus: async (id: string, status: Application['status'], note?: string): Promise<void> => {
     const docRef = doc(db, 'applications', id);
+    const applicationData = await applicationsApi.getApplication(id);
+    
     const updateData: any = {
       status,
       reviewedAt: serverTimestamp(),
-      reviewedBy: 'current-user' // This should come from auth context
+      reviewedBy: 'Admin Assistant' // In production, get from auth
     };
     
     if (note) {
-      updateData.notes = [
-        {
-          id: Date.now().toString(),
-          content: note,
-          authorId: 'current-user',
-          authorName: 'Current User',
-          createdAt: serverTimestamp()
-        }
-      ];
+      const newNote = {
+        id: Date.now().toString(),
+        content: note,
+        authorId: 'admin-id',
+        authorName: 'Admin Assistant',
+        createdAt: new Date().toISOString()
+      };
+      updateData.notes = applicationData ? [...(applicationData.notes || []), newNote] : [newNote];
     }
     
     await updateDoc(docRef, updateData);
@@ -342,19 +343,34 @@ export const applicationsApi = {
 
   addApplicationNote: async (id: string, content: string): Promise<void> => {
     const docRef = doc(db, 'applications', id);
-    const applicationData = await getApplication(id);
+    const applicationData = await applicationsApi.getApplication(id);
     
     if (applicationData) {
       const newNote = {
         id: Date.now().toString(),
         content,
-        authorId: 'current-user',
-        authorName: 'Current User',
-        createdAt: serverTimestamp()
+        authorId: 'admin-id',
+        authorName: 'Admin Assistant',
+        createdAt: new Date().toISOString()
       };
       
       await updateDoc(docRef, {
-        notes: [...applicationData.notes, newNote]
+        notes: [...(applicationData.notes || []), newNote]
+      });
+    }
+  },
+
+  verifyDocument: async (id: string, docId: string, verified: boolean): Promise<void> => {
+    const docRef = doc(db, 'applications', id);
+    const applicationData = await applicationsApi.getApplication(id);
+    
+    if (applicationData && applicationData.documents) {
+      const updatedDocs = applicationData.documents.map(d => 
+        d.id === docId ? { ...d, verified } : d
+      );
+      
+      await updateDoc(docRef, {
+        documents: updatedDocs
       });
     }
   }
@@ -364,7 +380,7 @@ export const applicationsApi = {
 export const paymentsApi = {
   getPayments: async (filters?: { status?: string; method?: string }): Promise<Payment[]> => {
     const paymentsRef = collection(db, 'payments');
-    let q = paymentsRef;
+    let q: any = paymentsRef;
     
     if (filters?.status) {
       q = query(q, where('status', '==', filters.status));
@@ -382,7 +398,7 @@ export const paymentsApi = {
 
   subscribeToPayments: (callback: (payments: Payment[]) => void, filters?: { status?: string; method?: string }) => {
     const paymentsRef = collection(db, 'payments');
-    let q = paymentsRef;
+    let q: any = paymentsRef;
     
     if (filters?.status) {
       q = query(q, where('status', '==', filters.status));
@@ -484,11 +500,39 @@ export const dashboardApi = {
     ]);
 
     const totalApplications = applications.length;
-    const pendingReviews = applications.filter(a => a.status === 'pending').length;
+    const pendingReviews = applications.filter(a => a.status === 'pending' || a.status === 'under_review').length;
     const approved = applications.filter(a => a.status === 'approved').length;
     const rejected = applications.filter(a => a.status === 'rejected').length;
     const revenue = payments.filter(p => p.status === 'completed').reduce((sum, p) => sum + p.amount, 0);
     const pendingPayments = payments.filter(p => p.status === 'pending').length;
+
+    // Aggregate by Status
+    const statusCounts: Record<string, number> = {
+      pending: 0,
+      under_review: 0,
+      approved: 0,
+      rejected: 0,
+      waitlisted: 0,
+    };
+    applications.forEach(a => {
+      if (statusCounts[a.status] !== undefined) statusCounts[a.status]++;
+    });
+
+    // Aggregate by Faculty/School
+    const schoolCounts: Record<string, number> = {};
+    applications.forEach(a => {
+      const school = a.programmeChoice?.faculty || 'Unspecified';
+      schoolCounts[school] = (schoolCounts[school] || 0) + 1;
+    });
+
+    // Simple trend aggregation (last 7 days based on submittedAt)
+    const trend: Record<string, number> = {};
+    applications.forEach(a => {
+      if (a.submittedAt) {
+        const date = a.submittedAt.split('T')[0];
+        trend[date] = (trend[date] || 0) + 1;
+      }
+    });
 
     return {
       totalApplications,
@@ -497,16 +541,15 @@ export const dashboardApi = {
       rejected,
       revenue,
       pendingPayments,
-      applicationsTrend: [], // Would need time-based queries
-      statusDistribution: [
-        { status: 'pending', count: applications.filter(a => a.status === 'pending').length },
-        { status: 'under_review', count: applications.filter(a => a.status === 'under_review').length },
-        { status: 'approved', count: applications.filter(a => a.status === 'approved').length },
-        { status: 'rejected', count: applications.filter(a => a.status === 'rejected').length },
-        { status: 'waitlisted', count: applications.filter(a => a.status === 'waitlisted').length },
-      ],
-      revenueTrend: [], // Would need time-based queries
-      applicationsBySchool: [] // Would need aggregation
+      applicationsTrend: Object.entries(trend)
+        .map(([date, count]) => ({ date, count }))
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .slice(-10),
+      statusDistribution: Object.entries(statusCounts).map(([status, count]) => ({ status, count })),
+      revenueTrend: [], // Simplified for now
+      applicationsBySchool: Object.entries(schoolCounts)
+        .map(([school, count]) => ({ school, count }))
+        .sort((a, b) => b.count - a.count)
     };
   },
 

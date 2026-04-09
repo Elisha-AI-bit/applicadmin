@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { firebaseApi } from '@/lib/firebaseApi';
+import { useRealtimePayments } from '@/hooks/useRealtimeQuery';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -22,7 +22,6 @@ import {
 } from '@/components/ui/table';
 import { formatDate, formatCurrency, getStatusColor } from '@/lib/utils';
 import { Search, Filter, Download, Eye, CreditCard, DollarSign } from 'lucide-react';
-import type { Payment } from '@/types';
 
 const statusOptions = [
   { value: 'all', label: 'All Status' },
@@ -45,37 +44,30 @@ export function PaymentsList() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [methodFilter, setMethodFilter] = useState('all');
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [loading, setLoading] = useState(false);
 
-  // Fetch payments from Firebase
-  const fetchPayments = async () => {
-    setLoading(true);
-    try {
-      const paymentsData = await firebaseApi.payments.getPayments({
-        status: statusFilter === 'all' ? undefined : statusFilter,
-        method: methodFilter === 'all' ? undefined : methodFilter,
-      });
-      setPayments(paymentsData);
-    } catch (error) {
-      console.error('Error fetching payments:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data: payments = [], isLoading } = useRealtimePayments({
+    status: statusFilter === 'all' ? undefined : statusFilter,
+    method: methodFilter === 'all' ? undefined : methodFilter,
+  });
 
-  // Initial fetch and set up real-time updates
-  useEffect(() => {
-    fetchPayments();
-  }, [statusFilter, methodFilter]);
+  // Filter payments based on search query
+  const filteredPayments = useMemo(() => {
+    return payments.filter(payment =>
+      payment.studentName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      payment.id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      payment.transactionId?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [payments, searchQuery]);
 
-  // Filter payments based on search query (client-side filtering for demo)
-  const filteredPayments = payments.filter(payment =>
-    payment.studentName.toLowerCase().includes(searchQuery.toLowerCase())
+  const totalRevenue = useMemo(() => 
+    filteredPayments.filter(p => p.status === 'completed').reduce((sum, p) => sum + p.amount, 0),
+    [filteredPayments]
   );
-
-  const totalRevenue = filteredPayments.filter(p => p.status === 'completed').reduce((sum, p) => sum + p.amount, 0);
-  const pendingAmount = filteredPayments.filter(p => p.status === 'pending').reduce((sum, p) => sum + p.amount, 0);
+  
+  const pendingAmount = useMemo(() => 
+    filteredPayments.filter(p => p.status === 'pending').reduce((sum, p) => sum + p.amount, 0),
+    [filteredPayments]
+  );
 
   return (
     <div className="space-y-6">
@@ -177,7 +169,7 @@ export function PaymentsList() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {loading ? (
+            {isLoading ? (
               <TableRow>
                 <TableCell colSpan={7} className="h-24 text-center">
                   <div className="flex justify-center">

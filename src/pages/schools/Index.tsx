@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { formatDate, getStatusColor } from '@/lib/utils';
+import { getStatusColor } from '@/lib/utils';
 import { Search, Plus, Filter, Eye, Edit, Building2, Upload } from 'lucide-react';
 import type { School } from '@/types';
 
@@ -30,20 +30,6 @@ export function SchoolsList() {
   const [schools, setSchools] = useState<School[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Fetch schools from Firebase
-  const fetchSchools = async () => {
-    setLoading(true);
-    try {
-      const schoolsData = await firebaseApi.schools.getSchools(
-        statusFilter === 'all' ? undefined : statusFilter
-      );
-      setSchools(schoolsData);
-    } catch (error) {
-      console.error('Error fetching schools:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Set up real-time subscription
   useEffect(() => {

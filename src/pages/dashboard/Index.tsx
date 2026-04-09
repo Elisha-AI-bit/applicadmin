@@ -26,13 +26,13 @@ import {
   Pie,
   Cell,
 } from 'recharts';
-import type { DashboardStats, Activity as ActivityType } from '@/types';
+import type { DashboardStats } from '@/types';
 
 const COLORS = ['#3B82F6', '#8B5CF6', '#10B981', '#EF4444', '#F59E0B'];
 
 export function Dashboard() {
   // Real-time subscriptions
-  const { data: applications = [], isLoading } = useRealtimeApplications();
+  const { data: applications = [] } = useRealtimeApplications();
   const { data: payments = [] } = useRealtimePayments();
   const { data: activities = [] } = useRealtimeActivities(5);
   
@@ -41,11 +41,39 @@ export function Dashboard() {
   // Calculate stats in real-time
   const calculateStats = (): DashboardStats => {
     const totalApplications = applications.length;
-    const pendingReviews = applications.filter((a: any) => a.status === 'pending').length;
+    const pendingReviews = applications.filter((a: any) => a.status === 'pending' || a.status === 'under_review').length;
     const approved = applications.filter((a: any) => a.status === 'approved').length;
     const rejected = applications.filter((a: any) => a.status === 'rejected').length;
     const revenue = payments.filter((p: any) => p.status === 'completed').reduce((sum: number, p: any) => sum + p.amount, 0);
     const pendingPayments = payments.filter((p: any) => p.status === 'pending').length;
+
+    // Aggregate by Status
+    const statusCounts: Record<string, number> = {
+      pending: 0,
+      under_review: 0,
+      approved: 0,
+      rejected: 0,
+      waitlisted: 0,
+    };
+    applications.forEach((a: any) => {
+      if (statusCounts[a.status] !== undefined) statusCounts[a.status]++;
+    });
+
+    // Aggregate by Faculty/School
+    const schoolCounts: Record<string, number> = {};
+    applications.forEach((a: any) => {
+      const school = a.programmeChoice?.faculty || 'Unspecified';
+      schoolCounts[school] = (schoolCounts[school] || 0) + 1;
+    });
+
+    // Simple trend aggregation
+    const trend: Record<string, number> = {};
+    applications.forEach((a: any) => {
+      if (a.submittedAt) {
+        const date = a.submittedAt.split('T')[0];
+        trend[date] = (trend[date] || 0) + 1;
+      }
+    });
 
     return {
       totalApplications,
@@ -54,16 +82,18 @@ export function Dashboard() {
       rejected,
       revenue,
       pendingPayments,
-      applicationsTrend: [], // Would need time-based queries
-      statusDistribution: [
-        { status: 'pending', count: applications.filter((a: any) => a.status === 'pending').length },
-        { status: 'under_review', count: applications.filter((a: any) => a.status === 'under_review').length },
-        { status: 'approved', count: applications.filter((a: any) => a.status === 'approved').length },
-        { status: 'rejected', count: applications.filter((a: any) => a.status === 'rejected').length },
-        { status: 'waitlisted', count: applications.filter((a: any) => a.status === 'waitlisted').length },
-      ],
-      revenueTrend: [], // Would need time-based queries
-      applicationsBySchool: [] // Would need aggregation
+      applicationsTrend: Object.entries(trend)
+        .map(([date, count]) => ({ date, count }))
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .slice(-10),
+      statusDistribution: Object.entries(statusCounts).map(([status, count]) => ({ 
+        status: status.replace('_', ' '), 
+        count 
+      })),
+      revenueTrend: [], // Simplified
+      applicationsBySchool: Object.entries(schoolCounts)
+        .map(([school, count]) => ({ school, count }))
+        .sort((a, b) => b.count - a.count)
     };
   };
 
@@ -183,7 +213,7 @@ export function Dashboard() {
                   dataKey="count"
                   nameKey="status"
                 >
-                  {(stats?.statusDistribution || []).map((entry, index) => (
+                  {(stats?.statusDistribution || []).map((_entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>

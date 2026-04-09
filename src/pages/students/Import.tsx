@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { parseCSV } from '@/lib/utils';
 import { toast } from 'sonner';
 import { Upload, ArrowLeft, Download, FileSpreadsheet, CheckCircle, AlertCircle } from 'lucide-react';
@@ -19,12 +18,17 @@ export function StudentImport() {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
       setFile(selectedFile);
-      try {
-        const data = await parseCSV(selectedFile);
-        setPreview(data.slice(0, 5));
-      } catch {
-        toast.error('Failed to parse CSV file');
-      }
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const text = event.target?.result as string;
+        try {
+          const data = parseCSV(text);
+          setPreview(data.slice(0, 5));
+        } catch {
+          toast.error('Failed to parse CSV file');
+        }
+      };
+      reader.readAsText(selectedFile);
     }
   };
 

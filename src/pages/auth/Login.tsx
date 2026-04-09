@@ -21,7 +21,7 @@ export function Login() {
     e.preventDefault();
     clearError();
     try {
-      await login({ email, password, rememberMe });
+      await login(email, password);
       navigate('/dashboard');
     } catch {
       // Error is handled by the store

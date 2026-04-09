@@ -36,7 +36,8 @@ const navigation = [
 export function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { sidebarCollapsed, toggleSidebar } = useAppStore();
+  const { sidebarOpen, toggleSidebar } = useAppStore();
+  const sidebarCollapsed = !sidebarOpen;
 
   const isActive = (href: string) => {
     if (href === '/dashboard') {
@@ -81,8 +82,6 @@ export function Sidebar() {
         className="flex-1 py-4"
         style={{
           position: 'relative',
-          '--radix-scroll-area-corner-width': '0px',
-          '--radix-scroll-area-corner-height': '0px',
           backgroundColor: 'rgba(17, 24, 39, 1)',
           backgroundImage: 'none',
           backgroundClip: 'unset',
@@ -90,7 +89,7 @@ export function Sidebar() {
           color: 'rgba(19, 61, 231, 1)',
           borderWidth: '10px',
           borderColor: 'rgba(17, 24, 39, 1)',
-        }}
+        } as any}
       >
         <nav className="space-y-1 px-2">
           {navigation.map((item) => {

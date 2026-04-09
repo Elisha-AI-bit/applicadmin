@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
 import { mockApi } from '@/lib/api';
@@ -8,16 +7,14 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
-import { formatDate, getInitials, getStatusColor } from '@/lib/utils';
+import { formatDate, getInitials } from '@/lib/utils';
 import {
   ArrowLeft,
   Mail,
   Phone,
   MapPin,
   Calendar,
-  GraduationCap,
   FileText,
-  User,
 } from 'lucide-react';
 
 export function StudentDetail() {

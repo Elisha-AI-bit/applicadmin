@@ -1,9 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { mockApi } from '@/lib/api';
+import { firebaseApi } from '@/lib/firebaseApi';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { formatDate } from '@/lib/utils';
 import { ArrowLeft, Download, FileText, TrendingUp, Users, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -28,8 +26,34 @@ export function ApplicationsReport() {
 
   const { data: stats } = useQuery({
     queryKey: ['dashboard-stats'],
-    queryFn: mockApi.getDashboardStats,
+    queryFn: firebaseApi.dashboard.getDashboardStats,
   });
+
+  const exportToCSV = async () => {
+    const applications = await firebaseApi.applications.getApplications();
+    const headers = ['Application ID', 'First Name', 'Last Name', 'Email', 'School', 'Program', 'Status', 'Submitted At'];
+    const rows = applications.map(app => [
+      app.applicationId,
+      app.personalInfo?.firstName || '',
+      app.personalInfo?.lastName || '',
+      app.contactInfo?.email || '',
+      app.programmeChoice?.faculty || '',
+      app.programmeChoice?.programmeName || '',
+      app.status,
+      app.submittedAt
+    ]);
+
+    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `applications_report_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="space-y-6">
@@ -122,7 +146,7 @@ export function ApplicationsReport() {
                   dataKey="count"
                   label
                 >
-                  {(stats?.statusDistribution || []).map((entry, index) => (
+                  {(stats?.statusDistribution || []).map((_entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
@@ -139,9 +163,9 @@ export function ApplicationsReport() {
             <CardTitle>Applications by School</CardTitle>
             <CardDescription>Top institutions by application volume</CardDescription>
           </div>
-          <Button variant="outline">
+          <Button variant="outline" onClick={exportToCSV}>
             <Download className="mr-2 h-4 w-4" />
-            Export
+            Export CSV
           </Button>
         </CardHeader>
         <CardContent>

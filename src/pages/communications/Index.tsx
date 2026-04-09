@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { formatDate } from '@/lib/utils';
-import { Mail, MessageSquare, Send, Plus, Search, Bell, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { Mail, MessageSquare, Send, Plus, Search, Bell, Clock } from 'lucide-react';
 
 export function Communications() {
   const navigate = useNavigate();
