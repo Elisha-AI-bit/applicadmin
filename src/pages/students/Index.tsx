@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRealtimeStudents } from '@/hooks/useRealtimeQuery';
+import { firebaseApi } from '@/lib/firebaseApi';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -15,13 +15,31 @@ import {
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { formatDate, getInitials } from '@/lib/utils';
 import { Search, Plus, Upload, Eye, Mail, Phone } from 'lucide-react';
+import type { Student } from '@/types';
 
 export function StudentsList() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
-  
-  // Real-time subscription to students
-  const { data: students = [], isLoading } = useRealtimeStudents();
+  const [students, setStudents] = useState<Student[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch students from Firebase
+  const fetchStudents = async () => {
+    setLoading(true);
+    try {
+      const studentsData = await firebaseApi.students.getStudents(searchQuery);
+      setStudents(studentsData);
+    } catch (error) {
+      console.error('Error fetching students:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initial fetch and set up real-time updates
+  useEffect(() => {
+    fetchStudents();
+  }, [searchQuery]);
 
   // Filter students based on search query (client-side filtering for demo)
   const filteredStudents = students.filter(student =>
@@ -72,7 +90,7 @@ export function StudentsList() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {isLoading ? (
+              {loading ? (
                 <TableRow>
                   <TableCell colSpan={5} className="h-24 text-center">
                     <div className="flex justify-center">
@@ -112,7 +130,7 @@ export function StudentsList() {
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell>{student.applications.length} applications</TableCell>
+                    <TableCell>{student.applications?.length || 0} applications</TableCell>
                     <TableCell>{formatDate(student.createdAt)}</TableCell>
                     <TableCell className="text-right">
                       <Button
