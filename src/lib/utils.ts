@@ -25,7 +25,10 @@ export function formatNumber(num: number): string {
   return new Intl.NumberFormat('en-US').format(num)
 }
 
-export function getInitials(firstName: string, lastName?: string): string {
+export function getInitials(firstName?: string, lastName?: string): string {
+  if (!firstName && !lastName) return 'U';
+  if (!firstName) return lastName!.charAt(0).toUpperCase();
+
   if (lastName) {
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
   }

@@ -26,7 +26,7 @@ export function Header() {
   };
 
   return (
-    <header className="flex h-16 items-center justify-between border-b bg-card px-4 lg:px-6">
+    <header className="flex h-16 items-center justify-between border-b border-border/40 bg-background/60 backdrop-blur-md px-4 lg:px-6 sticky top-0 z-10 shadow-sm">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" className="lg:hidden" onClick={toggleSidebar}>
           <Menu className="h-5 w-5" />

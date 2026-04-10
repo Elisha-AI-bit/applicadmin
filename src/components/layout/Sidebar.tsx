@@ -49,23 +49,23 @@ export function Sidebar() {
   return (
     <div
       className={cn(
-        'flex flex-col border-r bg-card transition-all duration-300',
+        'group flex flex-col border-r bg-[#0a0a0b] text-slate-300 transition-all duration-300 z-20',
         sidebarCollapsed ? 'w-16' : 'w-64'
       )}
     >
-      <div className="flex h-16 items-center justify-between px-4 text-[rgba(42,72,192,1)] bg-[rgba(17,24,39,1)]">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-            <GraduationCap className="h-5 w-5 text-primary-foreground" />
+      <div className="flex h-16 items-center justify-between px-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-blue-600 shadow-lg shadow-primary/20">
+            <GraduationCap className="h-5 w-5 text-white" />
           </div>
           {!sidebarCollapsed && (
-            <span className="text-lg font-semibold">ApplicAdmin</span>
+            <span className="text-lg font-bold tracking-tight text-white">ApplicAdmin</span>
           )}
         </div>
         <Button
           variant="ghost"
           size="icon"
-          className="hidden lg:flex"
+          className="hidden lg:flex text-slate-400 hover:text-white hover:bg-white/10"
           onClick={toggleSidebar}
         >
           {sidebarCollapsed ? (
@@ -76,22 +76,10 @@ export function Sidebar() {
         </Button>
       </div>
 
-      <Separator />
+      <Separator className="bg-white/10" />
 
-      <ScrollArea
-        className="flex-1 py-4"
-        style={{
-          position: 'relative',
-          backgroundColor: 'rgba(17, 24, 39, 1)',
-          backgroundImage: 'none',
-          backgroundClip: 'unset',
-          WebkitBackgroundClip: 'unset',
-          color: 'rgba(19, 61, 231, 1)',
-          borderWidth: '10px',
-          borderColor: 'rgba(17, 24, 39, 1)',
-        } as any}
-      >
-        <nav className="space-y-1 px-2">
+      <ScrollArea className="flex-1 py-4">
+        <nav className="space-y-1.5 px-3">
           {navigation.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.href);
@@ -99,16 +87,19 @@ export function Sidebar() {
             return (
               <Button
                 key={item.name}
-                variant={active ? 'secondary' : 'ghost'}
+                variant="ghost"
                 className={cn(
-                  'w-full justify-start gap-3',
-                  sidebarCollapsed && 'justify-center px-2'
+                  'w-full justify-start gap-3 transition-all duration-200',
+                  active 
+                    ? 'bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary' 
+                    : 'text-slate-400 hover:bg-white/5 hover:text-white',
+                  sidebarCollapsed && 'justify-center px-0'
                 )}
                 onClick={() => navigate(item.href)}
               >
-                <Icon className="h-5 w-5 shrink-0" />
+                <Icon className={cn("h-5 w-5 shrink-0 transition-transform duration-200", active ? "scale-110" : "")} />
                 {!sidebarCollapsed && (
-                  <span className="truncate">{item.name}</span>
+                  <span className="truncate font-medium">{item.name}</span>
                 )}
               </Button>
             );
@@ -116,18 +107,12 @@ export function Sidebar() {
         </nav>
       </ScrollArea>
 
-      <div
-        className="border-t p-4"
-        style={{
-          color: 'rgba(39, 45, 206, 1)',
-          backgroundColor: 'rgba(17, 24, 39, 1)',
-          borderTopColor: 'rgba(229, 231, 235, 1)',
-        }}
-      >
+      <div className="border-t border-white/10 p-4 bg-black/20">
         <div className={cn('flex items-center gap-3', sidebarCollapsed && 'justify-center')}>
           {!sidebarCollapsed && (
             <div className="flex-1">
-              <p className="text-xs text-muted-foreground">Version 1.0.0</p>
+              <p className="text-xs font-medium text-slate-500">ApplicAdmin OS</p>
+              <p className="text-[10px] text-slate-600">v1.2.0-beta</p>
             </div>
           )}
         </div>

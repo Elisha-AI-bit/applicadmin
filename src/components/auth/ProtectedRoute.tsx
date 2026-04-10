@@ -22,8 +22,14 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
     return <Navigate to="/auth/login" state={{ from: location }} replace />;
   }
 
-  if (requiredRole && user?.role !== requiredRole && user?.role !== 'admin') {
-    return <Navigate to="/dashboard" replace />;
+  if (requiredRole) {
+    const isSuperAdmin = user?.role === 'super_admin';
+    const isAdmin = user?.role === 'admin';
+    const hasRole = user?.role === requiredRole;
+
+    if (!isSuperAdmin && !isAdmin && !hasRole) {
+      return <Navigate to="/dashboard" replace />;
+    }
   }
 
   return <>{children}</>;

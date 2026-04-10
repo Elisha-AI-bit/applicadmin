@@ -118,53 +118,65 @@ export function Dashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">Overview of your school application management system</p>
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Dashboard</h1>
+        <p className="text-muted-foreground mt-1 text-lg">Overview of your school application management system</p>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="hover-lift border-primary/10 bg-gradient-to-br from-card to-blue-50/50 shadow-sm overflow-hidden relative group">
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-400 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Applications</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-semibold text-muted-foreground">Total Applications</CardTitle>
+            <div className="p-2 bg-blue-100 rounded-full dark:bg-blue-900/40">
+              <FileText className="h-4 w-4 text-primary" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatNumber(stats?.totalApplications || 0)}</div>
-            <p className="text-xs text-muted-foreground">All time applications</p>
+            <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">{formatNumber(stats?.totalApplications || 0)}</div>
+            <p className="text-xs text-muted-foreground mt-1 font-medium">All time applications</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="hover-lift border-yellow-500/10 bg-gradient-to-br from-card to-yellow-50/50 shadow-sm overflow-hidden relative group">
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-yellow-400 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Reviews</CardTitle>
-            <Clock className="h-4 w-4 text-yellow-500" />
+            <CardTitle className="text-sm font-semibold text-muted-foreground">Pending Reviews</CardTitle>
+            <div className="p-2 bg-yellow-100 rounded-full dark:bg-yellow-900/40">
+              <Clock className="h-4 w-4 text-yellow-600 dark:text-yellow-500" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatNumber(stats?.pendingReviews || 0)}</div>
-            <p className="text-xs text-muted-foreground">Awaiting review</p>
+            <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">{formatNumber(stats?.pendingReviews || 0)}</div>
+            <p className="text-xs text-muted-foreground mt-1 font-medium">Awaiting final review</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="hover-lift border-green-500/10 bg-gradient-to-br from-card to-green-50/50 shadow-sm overflow-hidden relative group">
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-green-400 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Approved</CardTitle>
-            <CheckCircle className="h-4 w-4 text-green-500" />
+            <CardTitle className="text-sm font-semibold text-muted-foreground">Approved</CardTitle>
+            <div className="p-2 bg-green-100 rounded-full dark:bg-green-900/40">
+              <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-500" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatNumber(stats?.approved || 0)}</div>
-            <p className="text-xs text-muted-foreground">Successfully approved</p>
+            <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">{formatNumber(stats?.approved || 0)}</div>
+            <p className="text-xs text-muted-foreground mt-1 font-medium">Successfully processed</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="hover-lift border-indigo-500/10 bg-gradient-to-br from-card to-indigo-50/50 shadow-sm overflow-hidden relative group">
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-indigo-400 to-violet-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Revenue</CardTitle>
-            <DollarSign className="h-4 w-4 text-primary" />
+            <CardTitle className="text-sm font-semibold text-muted-foreground">Revenue</CardTitle>
+            <div className="p-2 bg-indigo-100 rounded-full dark:bg-indigo-900/40">
+              <DollarSign className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(stats?.revenue || 0)}</div>
-            <p className="text-xs text-muted-foreground">Total collected</p>
+            <div className="text-3xl font-bold tracking-tight text-indigo-600 dark:text-indigo-400">{formatCurrency(stats?.revenue || 0)}</div>
+            <p className="text-xs text-muted-foreground mt-1 font-medium">Total collected</p>
           </CardContent>
         </Card>
       </div>
@@ -267,31 +279,31 @@ export function Dashboard() {
       </div>
 
       {/* Recent Activity */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+      <Card className="shadow-sm border-border/40">
+        <CardHeader className="flex flex-row items-center justify-between border-b border-border/40 bg-muted/10 pb-4">
           <div>
-            <CardTitle>Recent Activity</CardTitle>
+            <CardTitle className="text-lg">Recent Activity</CardTitle>
             <CardDescription>Latest actions and updates</CardDescription>
           </div>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="hover-lift">
             View All
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
+        <CardContent className="pt-6">
+          <div className="space-y-6">
             {activities?.map((activity) => (
-              <div key={activity.id} className="flex items-center gap-4">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
+              <div key={activity.id} className="flex items-center gap-4 group">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 transition-colors group-hover:bg-primary/20">
                   <Activity className="h-4 w-4 text-primary" />
                 </div>
                 <div className="flex-1 space-y-1">
-                  <p className="text-sm font-medium">{activity.description}</p>
-                  <p className="text-xs text-muted-foreground">
-                    by {activity.actor} • {formatDate(activity.createdAt)}
+                  <p className="text-sm font-semibold tracking-tight text-slate-800 dark:text-slate-200">{activity.description}</p>
+                  <p className="text-xs text-muted-foreground font-medium">
+                    by <span className="text-primary">{activity.actor}</span> • {formatDate(activity.createdAt)}
                   </p>
                 </div>
-                <Badge variant="outline">{activity.type}</Badge>
+                <Badge variant="secondary" className="bg-slate-100 hover:bg-slate-200 text-slate-700">{activity.type}</Badge>
               </div>
             ))}
           </div>

@@ -20,7 +20,7 @@ import { ArrowLeft, Send, Mail, MessageSquare, Bell } from 'lucide-react';
 
 export function SendNotification() {
   const navigate = useNavigate();
-  const [selectedTemplate, setSelectedTemplate] = useState('');
+  const [selectedTemplate, setSelectedTemplate] = useState('none');
   const [recipients, setRecipients] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
@@ -96,7 +96,7 @@ export function SendNotification() {
                     <SelectValue placeholder="Select a template (optional)" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">None - Custom message</SelectItem>
+                    <SelectItem value="none">None - Custom message</SelectItem>
                     {templates?.map((template) => (
                       <SelectItem key={template.id} value={template.id}>
                         {template.name}

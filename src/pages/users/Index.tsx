@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { mockApi } from '@/lib/api';
+import { firebaseApi } from '@/lib/firebaseApi';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -24,49 +24,50 @@ export function UsersList() {
 
   const { data: users, isLoading } = useQuery({
     queryKey: ['users'],
-    queryFn: mockApi.getUsers,
+    queryFn: firebaseApi.users.getUsers,
   });
 
   const filteredUsers = users?.filter(
     (user) =>
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase())
+      (user.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (user.email || '').toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Users</h1>
-          <p className="text-muted-foreground">Manage admin users and permissions</p>
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Users</h1>
+          <p className="text-muted-foreground mt-1 text-lg">Manage admin users and permissions</p>
         </div>
-        <Button onClick={() => navigate('/users/new')}>
+        <Button className="hover-lift" onClick={() => navigate('/users/new')}>
           <Plus className="mr-2 h-4 w-4" />
           Add User
         </Button>
       </div>
 
-      <Card>
-        <CardHeader className="pb-3">
-          <div className="relative">
+      <Card className="hover-lift border-primary/10 bg-gradient-to-br from-card to-slate-50/50 shadow-sm relative group overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary to-blue-500 opacity-60"></div>
+        <CardHeader className="pb-3 border-b border-border/40 bg-muted/10">
+          <div className="relative max-w-sm">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search users by name or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9"
+              className="pl-9 border-slate-200 focus-visible:ring-primary/50"
             />
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           <Table>
-            <TableHeader>
+            <TableHeader className="bg-slate-50/50">
               <TableRow>
-                <TableHead>User</TableHead>
+                <TableHead className="pl-6">User</TableHead>
                 <TableHead>Role</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Last Login</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="text-right pr-6">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -80,21 +81,26 @@ export function UsersList() {
                 </TableRow>
               ) : filteredUsers?.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
-                    No users found
+                  <TableCell colSpan={5} className="h-32 text-center text-muted-foreground">
+                    <div className="flex flex-col items-center justify-center">
+                      <p className="font-medium text-slate-500">No users found</p>
+                      <p className="text-sm">Adjust your search query to find more users.</p>
+                    </div>
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredUsers?.map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell>
+                  <TableRow key={user.id} className="group/row transition-colors hover:bg-slate-50/80">
+                    <TableCell className="pl-6">
                       <div className="flex items-center gap-3">
-                        <Avatar className="h-9 w-9">
-                          <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+                        <Avatar className="h-10 w-10 border border-slate-200">
+                          <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                            {getInitials(user.name)}
+                          </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="font-medium">{user.name}</p>
-                          <p className="text-sm text-muted-foreground">{user.email}</p>
+                          <p className="font-semibold tracking-tight text-slate-800">{user.name}</p>
+                          <p className="text-sm text-slate-500">{user.email}</p>
                         </div>
                       </div>
                     </TableCell>
@@ -104,17 +110,18 @@ export function UsersList() {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge className={user.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
+                      <Badge className={user.isActive ? 'bg-green-100/80 text-green-800 hover:bg-green-100 border-green-200' : 'bg-slate-100 text-slate-800 border-slate-200'}>
                         {user.isActive ? 'Active' : 'Inactive'}
                       </Badge>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="text-slate-500 font-medium text-sm">
                       {user.lastLoginAt ? formatDate(user.lastLoginAt) : 'Never'}
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right pr-6">
                       <Button
                         variant="ghost"
                         size="sm"
+                        className="opacity-0 group-hover/row:opacity-100 transition-opacity text-primary hover:text-primary hover:bg-primary/10"
                         onClick={() => navigate(`/users/${user.id}/edit`)}
                       >
                         <Edit2 className="mr-2 h-4 w-4" />
