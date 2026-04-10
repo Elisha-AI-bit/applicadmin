@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { firebaseApi } from '@/lib/firebaseApi';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
   Table,
   TableBody,
