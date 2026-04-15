@@ -1,6 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { onSnapshot, doc, collection, query, where, orderBy, limit, getDoc, getDocs } from 'firebase/firestore';
+import {
+  onSnapshot,
+  doc,
+  collection,
+  query,
+  where,
+  orderBy,
+  limit,
+  getDoc,
+  getDocs,
+} from 'firebase/firestore';
+import type {
+  DocumentData,
+  DocumentSnapshot,
+  QueryDocumentSnapshot,
+  QuerySnapshot,
+  FirestoreError,
+} from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 // Mock data fallback for development when Firebase permissions are denied
@@ -254,11 +271,11 @@ export function useRealtimeQuery<T = any>({
       if (docId) {
         // Subscribe to single document
         const docRef = doc(db, collectionName, docId);
-        unsubscribe = onSnapshot(docRef, (docSnap) => {
+        unsubscribe = onSnapshot(docRef, (docSnap: DocumentSnapshot<DocumentData>) => {
           const data = docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } as T : null;
           queryClient.setQueryData(queryKey, data);
           setIsRealtimeConnected(true);
-        }, (error) => {
+        }, (error: FirestoreError) => {
           console.error('Real-time subscription error:', error);
           setIsRealtimeConnected(false);
           // Fall back to mock data if permission denied
@@ -276,11 +293,11 @@ export function useRealtimeQuery<T = any>({
           q = query(collectionRef, ...constraints);
         }
         
-        unsubscribe = onSnapshot(q, (querySnapshot) => {
-          const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as any) })) as T[];
+        unsubscribe = onSnapshot(q, (querySnapshot: QuerySnapshot<DocumentData>) => {
+          const data = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => ({ id: doc.id, ...(doc.data() as any) })) as T[];
           queryClient.setQueryData(queryKey, data);
           setIsRealtimeConnected(true);
-        }, (error) => {
+        }, (error: FirestoreError) => {
           console.error('Real-time subscription error:', error);
           setIsRealtimeConnected(false);
           // Fall back to mock data if permission denied
