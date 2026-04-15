@@ -1,10 +1,12 @@
 import { Outlet, Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '@/stores/authStore';
+import { useAppStore } from '@/stores/appStore';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 
 export function Layout() {
   const { isAuthenticated, isLoading } = useAuthStore();
+  const { sidebarOpen, toggleSidebar } = useAppStore();
   const location = useLocation();
 
   if (isLoading) {
@@ -20,7 +22,14 @@ export function Layout() {
   }
 
   return (
-    <div className="flex h-screen bg-muted/20">
+    <div className="flex h-screen bg-slate-100">
+      {/* Mobile backdrop */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-slate-900/40 lg:hidden"
+          onClick={toggleSidebar}
+        />
+      )}
       <Sidebar />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header />

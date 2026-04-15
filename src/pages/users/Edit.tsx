@@ -100,7 +100,7 @@ export function EditUser() {
 
       <form onSubmit={handleSubmit} className="max-w-2xl">
         <Card className="hover-lift border-primary/10 bg-gradient-to-br from-card to-slate-50/50 shadow-sm relative overflow-hidden group">
-          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary to-blue-500 opacity-60"></div>
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary to-cyan-500 opacity-60"></div>
           <CardHeader className="border-b border-border/40 bg-muted/10">
             <CardTitle className="text-xl">User Profile</CardTitle>
             <CardDescription>Modify the user details below</CardDescription>

@@ -14,7 +14,6 @@ interface AppNotification {
 interface AppState {
   notifications: AppNotification[]
   sidebarOpen: boolean
-  theme: 'light' | 'dark'
   loading: boolean
   currentPage: string
   globalSearchQuery: string
@@ -27,7 +26,6 @@ interface AppState {
   clearNotifications: () => void
   toggleSidebar: () => void
   setSidebarOpen: (open: boolean) => void
-  setTheme: (theme: 'light' | 'dark') => void
   setLoading: (loading: boolean) => void
   setCurrentPage: (page: string) => void
   setGlobalSearchQuery: (query: string) => void
@@ -37,7 +35,6 @@ interface AppState {
 export const useAppStore = create<AppState>((set) => ({
   notifications: [],
   sidebarOpen: true,
-  theme: 'light',
   loading: false,
   currentPage: '',
   globalSearchQuery: '',
@@ -100,11 +97,6 @@ export const useAppStore = create<AppState>((set) => ({
     set({ sidebarOpen: open })
   },
 
-  setTheme: (theme) => {
-    set({ theme })
-    localStorage.setItem('theme', theme)
-  },
-
   setLoading: (loading) => {
     set({ loading })
   },
@@ -124,11 +116,6 @@ export const useAppStore = create<AppState>((set) => ({
   }
 }))
 
-// Initialize theme from localStorage
-const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
-if (savedTheme) {
-  useAppStore.setState({ theme: savedTheme })
-}
 
 // Hook to sync notifications with Firebase
 export const useFirebaseNotifications = () => {

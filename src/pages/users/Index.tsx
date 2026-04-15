@@ -37,7 +37,7 @@ export function UsersList() {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-8">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-transparent">Users</h1>
+          <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-cyan-500 bg-clip-text text-transparent">Users</h1>
           <p className="text-muted-foreground text-lg">Manage admin users and permissions</p>
         </div>
         <Button onClick={() => navigate('/users/new')} className="shadow-md hover:shadow-lg transition-all group">
@@ -47,7 +47,7 @@ export function UsersList() {
       </div>
 
       <Card className="hover-lift border-primary/10 bg-gradient-to-br from-card to-slate-50/50 shadow-sm relative group overflow-hidden">
-        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary to-blue-500 opacity-60"></div>
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary to-cyan-500 opacity-60"></div>
         <CardHeader className="pb-3 border-b border-border/40 bg-muted/10">
           <div className="relative max-w-sm">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

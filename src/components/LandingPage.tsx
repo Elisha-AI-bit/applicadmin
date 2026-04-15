@@ -78,20 +78,20 @@ const LandingPage = () => {
   ]
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+      <header className="bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
         <div className="container">
           <div className="flex-between py-4">
             <div className="flex items-center gap-2">
-              <GraduationCap className="w-8 h-8 text-primary" />
-              <span className="text-xl font-bold text-gray-900">EduAdmin Pro</span>
+              <GraduationCap className="w-8 h-8 text-primary animate-pulse" />
+              <span className="text-xl font-bold text-foreground">ApplicAdmin</span>
             </div>
             <nav className="hidden md:flex items-center gap-8">
-              <a href="#features" className="text-gray-600 hover:text-primary">Features</a>
-              <a href="#testimonials" className="text-gray-600 hover:text-primary">Testimonials</a>
-              <a href="#pricing" className="text-gray-600 hover:text-primary">Pricing</a>
-              <a href="#contact" className="text-gray-600 hover:text-primary">Contact</a>
+              <a href="#features" className="text-muted-foreground hover:text-primary transition-colors">Features</a>
+              <a href="#testimonials" className="text-muted-foreground hover:text-primary transition-colors">Testimonials</a>
+              <a href="#pricing" className="text-muted-foreground hover:text-primary transition-colors">Pricing</a>
+              <a href="#contact" className="text-muted-foreground hover:text-primary transition-colors">Contact</a>
             </nav>
             <div className="flex items-center gap-4">
               <button className="btn btn-secondary">Sign In</button>
@@ -102,28 +102,29 @@ const LandingPage = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container">
+      <section className="py-20 bg-gradient-to-br from-primary/5 to-accent/5 relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+        <div className="container relative">
           <div className="grid grid-2 items-center gap-12">
-            <div>
-              <h1 className="text-5xl font-bold text-gray-900 mb-6">
+            <div className="animate-in slide-in-from-left duration-700">
+              <h1 className="text-5xl font-bold text-foreground mb-6 leading-tight">
                 Transform Academic Administration with
-                <span className="text-primary"> Smart Technology</span>
+                <span className="gradient-text"> Smart Technology</span>
               </h1>
-              <p className="text-xl text-gray-600 mb-8">
+              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
                 Streamline student management, automate application processing, and gain valuable insights 
                 with our comprehensive academic administration platform.
               </p>
               <div className="flex flex-wrap gap-4 mb-8">
-                <button className="btn btn-primary btn-lg">
+                <button className="btn btn-primary btn-lg group">
                   Start Free Trial
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </button>
                 <button className="btn btn-secondary btn-lg">
                   Book Demo
                 </button>
               </div>
-              <div className="flex items-center gap-8 text-sm text-gray-600">
+              <div className="flex flex-wrap items-center gap-8 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-5 h-5 text-green-500" />
                   <span>No credit card required</span>
@@ -138,36 +139,36 @@ const LandingPage = () => {
                 </div>
               </div>
             </div>
-            <div className="hidden lg:block">
+            <div className="hidden lg:block animate-in slide-in-from-right duration-700 delay-200">
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent rounded-2xl transform rotate-3"></div>
-                <div className="relative bg-white rounded-2xl shadow-2xl p-8">
+                <div className="absolute inset-0 bg-gradient-to-r from-primary to-cyan-500 rounded-2xl transform rotate-3 animate-pulse"></div>
+                <div className="relative bg-card rounded-2xl shadow-2xl p-8 border">
                   <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-blue-100 rounded-full flex-center">
-                        <Users className="w-6 h-6 text-blue-600" />
+                    <div className="flex items-center gap-3 hover-lift">
+                      <div className="w-12 h-12 bg-primary/10 rounded-full flex-center">
+                        <Users className="w-6 h-6 text-primary" />
                       </div>
                       <div>
-                        <p className="font-semibold">Active Students</p>
-                        <p className="text-2xl font-bold text-gray-900">2,847</p>
+                        <p className="font-semibold text-foreground">Active Students</p>
+                        <p className="text-2xl font-bold text-foreground">2,847</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-green-100 rounded-full flex-center">
+                    <div className="flex items-center gap-3 hover-lift">
+                      <div className="w-12 h-12 bg-green-500/10 rounded-full flex-center">
                         <FileText className="w-6 h-6 text-green-600" />
                       </div>
                       <div>
-                        <p className="font-semibold">Applications</p>
-                        <p className="text-2xl font-bold text-gray-900">1,234</p>
+                        <p className="font-semibold text-foreground">Applications</p>
+                        <p className="text-2xl font-bold text-foreground">1,234</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-purple-100 rounded-full flex-center">
-                        <TrendingUp className="w-6 h-6 text-purple-600" />
+                    <div className="flex items-center gap-3 hover-lift">
+                      <div className="w-12 h-12 bg-accent/10 rounded-full flex-center">
+                        <TrendingUp className="w-6 h-6 text-accent-foreground" />
                       </div>
                       <div>
-                        <p className="font-semibold">Success Rate</p>
-                        <p className="text-2xl font-bold text-gray-900">94.2%</p>
+                        <p className="font-semibold text-foreground">Success Rate</p>
+                        <p className="text-2xl font-bold text-foreground">94.2%</p>
                       </div>
                     </div>
                   </div>
@@ -253,7 +254,7 @@ const LandingPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-primary to-accent text-white">
+      <section className="py-20 bg-gradient-to-r from-primary to-cyan-500 text-white">
         <div className="container text-center">
           <h2 className="text-4xl font-bold mb-4">
             Ready to Transform Your Academic Administration?

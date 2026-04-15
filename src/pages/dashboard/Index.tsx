@@ -26,7 +26,7 @@ import {
   Pie,
   Cell,
 } from 'recharts';
-import type { DashboardStats } from '@/types';
+import { CardSkeleton } from '@/components/ui/skeleton';
 
 const COLORS = ['#3B82F6', '#8B5CF6', '#10B981', '#EF4444', '#F59E0B'];
 
@@ -109,8 +109,26 @@ export function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex h-96 items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-8">
+        <div className="space-y-1">
+          <div className="h-12 w-48 bg-muted rounded animate-pulse mb-2"></div>
+          <div className="h-6 w-96 bg-muted rounded animate-pulse"></div>
+        </div>
+
+        {/* KPI Cards Skeleton */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <CardSkeleton key={i} />
+          ))}
+        </div>
+
+        {/* Charts Skeleton */}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <CardSkeleton />
+          </div>
+          <CardSkeleton />
+        </div>
       </div>
     );
   }
@@ -118,7 +136,7 @@ export function Dashboard() {
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-8">
       <div className="space-y-1">
-        <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-cyan-500 bg-clip-text text-transparent">
           Dashboard
         </h1>
         <p className="text-muted-foreground text-lg">Overview of your school application management system</p>

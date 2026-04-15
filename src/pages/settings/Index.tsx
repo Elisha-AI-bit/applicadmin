@@ -38,7 +38,7 @@ export function Settings() {
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-8">
       <div className="space-y-1">
-        <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-transparent">Settings</h1>
+        <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-cyan-500 bg-clip-text text-transparent">Settings</h1>
         <p className="text-muted-foreground text-lg">Manage your account and application settings</p>
       </div>
 

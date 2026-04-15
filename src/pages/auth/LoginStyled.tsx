@@ -23,27 +23,27 @@ export function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 flex items-center justify-center p-4">
+      <div className="w-full max-w-md animate-in fade-in slide-in-from-bottom-4 duration-500">
         {/* Logo and Brand */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl mb-4">
-            <GraduationCap className="w-8 h-8 text-white" />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary to-cyan-500 rounded-2xl mb-4 shadow-lg">
+            <GraduationCap className="w-8 h-8 text-primary-foreground" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">EduAdmin Pro</h1>
-          <p className="text-gray-600">Academic Administration Platform</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">ApplicAdmin</h1>
+          <p className="text-muted-foreground">Academic Administration Platform</p>
         </div>
 
         {/* Login Card */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+        <div className="bg-card rounded-2xl shadow-xl border p-8 hover-lift">
           <div className="mb-6">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-2">Welcome back</h2>
-            <p className="text-gray-600">Sign in to access your admin dashboard</p>
+            <h2 className="text-2xl font-semibold text-foreground mb-2">Welcome back</h2>
+            <p className="text-muted-foreground">Sign in to access your admin dashboard</p>
           </div>
 
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-700 text-sm">{error}</p>
+            <div className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg animate-in slide-in-from-top duration-300">
+              <p className="text-destructive text-sm">{error}</p>
             </div>
           )}
 
