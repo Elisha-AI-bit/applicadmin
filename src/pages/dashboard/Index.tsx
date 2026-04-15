@@ -28,6 +28,19 @@ import {
 } from 'recharts';
 import { CardSkeleton } from '@/components/ui/skeleton';
 
+interface DashboardStats {
+  totalApplications: number;
+  pendingReviews: number;
+  approved: number;
+  rejected: number;
+  revenue: number;
+  pendingPayments: number;
+  applicationsTrend: { date: string; count: number }[];
+  statusDistribution: { status: string; count: number }[];
+  revenueTrend: { period: string; amount: number }[];
+  applicationsBySchool: { school: string; count: number }[];
+}
+
 const COLORS = ['#3B82F6', '#8B5CF6', '#10B981', '#EF4444', '#F59E0B'];
 
 export function Dashboard() {

@@ -28,7 +28,12 @@ export function EditUser() {
     enabled: !!id,
   });
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    email: string;
+    role: 'admin' | 'super_admin' | 'staff';
+    isActive: boolean;
+  }>({
     name: '',
     email: '',
     role: 'staff',
@@ -41,7 +46,7 @@ export function EditUser() {
       setFormData({
         name: user.name || '',
         email: user.email || '',
-        role: user.role || 'staff',
+        role: (user.role as 'admin' | 'super_admin' | 'staff') || 'staff',
         isActive: user.isActive ?? true,
       });
     }

@@ -23,11 +23,10 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
   }
 
   if (requiredRole) {
-    const isSuperAdmin = user?.role === 'super_admin';
     const isAdmin = user?.role === 'admin';
     const hasRole = user?.role === requiredRole;
 
-    if (!isSuperAdmin && !isAdmin && !hasRole) {
+    if (!isAdmin && !hasRole) {
       return <Navigate to="/dashboard" replace />;
     }
   }
