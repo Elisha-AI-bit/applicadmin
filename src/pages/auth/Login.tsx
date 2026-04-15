@@ -22,7 +22,7 @@ export function Login() {
     clearError();
     try {
       await login(email, password);
-      navigate('/dashboard');
+      navigate('/app/dashboard');
     } catch {
       // Error is handled by the store
     }

@@ -96,7 +96,7 @@ export function ProgramEdit() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['programs'] });
       toast.success(isEditing ? 'Program updated successfully' : 'Program created successfully');
-      navigate('/programs');
+      navigate('/app/programs');
     },
     onError: () => {
       toast.error('Failed to save program');
@@ -111,7 +111,7 @@ export function ProgramEdit() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Button variant="outline" size="icon" onClick={() => navigate('/programs')}>
+        <Button variant="outline" size="icon" onClick={() => navigate('/app/programs')}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
@@ -257,7 +257,7 @@ export function ProgramEdit() {
         </Card>
 
         <div className="flex justify-end gap-4">
-          <Button type="button" variant="outline" onClick={() => navigate('/programs')}>
+          <Button type="button" variant="outline" onClick={() => navigate('/app/programs')}>
             Cancel
           </Button>
           <Button type="submit" disabled={mutation.isPending}>

@@ -39,7 +39,7 @@ export function StudentImport() {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     toast.success('Students imported successfully');
     setIsUploading(false);
-    navigate('/students');
+    navigate('/app/students');
   };
 
   const downloadTemplate = () => {
@@ -59,7 +59,7 @@ export function StudentImport() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Button variant="outline" size="icon" onClick={() => navigate('/students')}>
+        <Button variant="outline" size="icon" onClick={() => navigate('/app/students')}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>

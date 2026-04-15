@@ -52,7 +52,7 @@ export function PaymentDetail() {
     return (
       <div className="text-center">
         <h1 className="text-2xl font-bold">Payment not found</h1>
-        <Button onClick={() => navigate('/payments')} className="mt-4">
+        <Button onClick={() => navigate('/app/payments')} className="mt-4">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Payments
         </Button>
@@ -64,7 +64,7 @@ export function PaymentDetail() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="icon" onClick={() => navigate('/payments')}>
+          <Button variant="outline" size="icon" onClick={() => navigate('/app/payments')}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>

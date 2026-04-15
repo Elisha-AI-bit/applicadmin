@@ -40,7 +40,7 @@ export function UsersList() {
           <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-cyan-500 bg-clip-text text-transparent">Users</h1>
           <p className="text-muted-foreground text-lg">Manage admin users and permissions</p>
         </div>
-        <Button onClick={() => navigate('/users/new')} className="shadow-md hover:shadow-lg transition-all group">
+        <Button onClick={() => navigate('/app/users/new')} className="shadow-md hover:shadow-lg transition-all group">
           <Plus className="mr-2 h-4 w-4 group-hover:rotate-90 transition-transform duration-300" />
           Add User
         </Button>

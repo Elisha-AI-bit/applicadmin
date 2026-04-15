@@ -69,7 +69,7 @@ export function SchoolEdit() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['schools'] });
       toast.success(isEditing ? 'School updated successfully' : 'School created successfully');
-      navigate('/schools');
+      navigate('/app/schools');
     },
     onError: () => {
       toast.error('Failed to save school');
@@ -84,7 +84,7 @@ export function SchoolEdit() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Button variant="outline" size="icon" onClick={() => navigate('/schools')}>
+        <Button variant="outline" size="icon" onClick={() => navigate('/app/schools')}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
@@ -157,7 +157,7 @@ export function SchoolEdit() {
         </Card>
 
         <div className="flex justify-end gap-4">
-          <Button type="button" variant="outline" onClick={() => navigate('/schools')}>
+          <Button type="button" variant="outline" onClick={() => navigate('/app/schools')}>
             Cancel
           </Button>
           <Button type="submit" disabled={mutation.isPending}>

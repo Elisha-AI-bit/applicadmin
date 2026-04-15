@@ -71,7 +71,7 @@ export function StudentsList() {
         <div className="flex gap-3">
           <Button 
             variant="outline" 
-            onClick={() => navigate('/students/import')}
+            onClick={() => navigate('/app/students/import')}
             className="group hover:border-primary/50 transition-colors shadow-sm"
           >
             <Upload className="mr-2 h-4 w-4 group-hover:-translate-y-0.5 transition-transform" />

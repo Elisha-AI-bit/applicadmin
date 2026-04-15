@@ -58,7 +58,7 @@ export function EditUser() {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       queryClient.invalidateQueries({ queryKey: ['user', id] });
       toast.success('User updated successfully');
-      navigate('/users');
+      navigate('/app/users');
     },
     onError: () => {
       toast.error('Failed to update user');
@@ -83,7 +83,7 @@ export function EditUser() {
       <div className="flex flex-col items-center justify-center h-96 space-y-4">
         <h1 className="text-2xl font-bold tracking-tight text-slate-800">User not found</h1>
         <p className="text-muted-foreground">The user you are trying to edit does not exist or has been removed.</p>
-        <Button onClick={() => navigate('/users')} className="mt-4 hover-lift">
+        <Button onClick={() => navigate('/app/users')} className="mt-4 hover-lift">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Users
         </Button>
@@ -94,7 +94,7 @@ export function EditUser() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Button variant="outline" size="icon" className="hover-lift" onClick={() => navigate('/users')}>
+        <Button variant="outline" size="icon" className="hover-lift" onClick={() => navigate('/app/users')}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
@@ -167,7 +167,7 @@ export function EditUser() {
             </div>
 
             <div className="flex justify-end gap-4 pt-4 border-t border-border/40 mt-6">
-              <Button type="button" variant="outline" onClick={() => navigate('/users')}>
+              <Button type="button" variant="outline" onClick={() => navigate('/app/users')}>
                 Cancel
               </Button>
               <Button type="submit" disabled={updateMutation.isPending} className="px-6">

@@ -74,7 +74,7 @@ export function ApplicationDetail() {
     return (
       <div className="text-center">
         <h1 className="text-2xl font-bold">Application not found</h1>
-        <Button onClick={() => navigate('/applications')} className="mt-4">
+        <Button onClick={() => navigate('/app/applications')} className="mt-4">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Applications
         </Button>
@@ -86,7 +86,7 @@ export function ApplicationDetail() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="icon" onClick={() => navigate('/applications')}>
+          <Button variant="outline" size="icon" onClick={() => navigate('/app/applications')}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>

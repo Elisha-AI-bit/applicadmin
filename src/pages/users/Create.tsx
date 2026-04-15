@@ -36,7 +36,7 @@ export function CreateUser() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       toast.success('User created successfully');
-      navigate('/users');
+      navigate('/app/users');
     },
     onError: () => {
       toast.error('Failed to create user');
@@ -51,7 +51,7 @@ export function CreateUser() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Button variant="outline" size="icon" className="hover-lift" onClick={() => navigate('/users')}>
+        <Button variant="outline" size="icon" className="hover-lift" onClick={() => navigate('/app/users')}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
@@ -124,7 +124,7 @@ export function CreateUser() {
             </div>
 
             <div className="flex justify-end gap-4 pt-4 border-t border-border/40 mt-6">
-              <Button type="button" variant="outline" onClick={() => navigate('/users')}>
+              <Button type="button" variant="outline" onClick={() => navigate('/app/users')}>
                 Cancel
               </Button>
               <Button type="submit" disabled={createMutation.isPending} className="px-6">

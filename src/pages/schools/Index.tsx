@@ -71,11 +71,11 @@ export function SchoolsList() {
           </p>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline" onClick={() => navigate('/schools/import')} className="group hover:border-primary/50 transition-colors shadow-sm">
+          <Button variant="outline" onClick={() => navigate('/app/schools/import')} className="group hover:border-primary/50 transition-colors shadow-sm">
             <Upload className="mr-2 h-4 w-4 group-hover:-translate-y-0.5 transition-transform" />
             Bulk Import
           </Button>
-          <Button onClick={() => navigate('/schools/new')} className="shadow-md hover:shadow-lg transition-all group">
+          <Button onClick={() => navigate('/app/schools/new')} className="shadow-md hover:shadow-lg transition-all group">
             <Plus className="mr-2 h-4 w-4 group-hover:rotate-90 transition-transform duration-300" />
             Add School
           </Button>

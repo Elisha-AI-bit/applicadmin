@@ -42,7 +42,7 @@ export function FinancialReport() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Button variant="outline" size="icon" onClick={() => navigate('/reports')}>
+        <Button variant="outline" size="icon" onClick={() => navigate('/app/reports')}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>

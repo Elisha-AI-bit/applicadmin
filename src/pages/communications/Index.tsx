@@ -31,7 +31,7 @@ export function Communications() {
           <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-cyan-500 bg-clip-text text-transparent">Communications</h1>
           <p className="text-muted-foreground text-lg">Manage notifications and message templates</p>
         </div>
-        <Button onClick={() => navigate('/communications/send')} className="shadow-md hover:shadow-lg transition-all group">
+        <Button onClick={() => navigate('/app/communications/send')} className="shadow-md hover:shadow-lg transition-all group">
           <Send className="mr-2 h-4 w-4 group-hover:-translate-y-0.5 transition-transform duration-300" />
           Send Notification
         </Button>
@@ -101,7 +101,7 @@ export function Communications() {
         <TabsContent value="templates" className="space-y-4">
           <div className="flex justify-between items-center">
             <p className="text-muted-foreground">Manage your message templates</p>
-            <Button variant="outline" onClick={() => navigate('/communications/templates')}>
+            <Button variant="outline" onClick={() => navigate('/app/communications/templates')}>
               <Plus className="mr-2 h-4 w-4" />
               New Template
             </Button>

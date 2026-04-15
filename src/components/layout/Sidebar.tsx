@@ -22,16 +22,16 @@ import {
 } from 'lucide-react';
 
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Applications', href: '/applications', icon: FileText, badge: 'pendingReviews' },
-  { name: 'Students', href: '/students', icon: Users },
-  { name: 'Payments', href: '/payments', icon: CreditCard },
-  { name: 'Academic Schools', href: '/schools', icon: School },
-  { name: 'Programs', href: '/programs', icon: BookOpen },
-  { name: 'Communications', href: '/communications', icon: Mail },
-  { name: 'Reports', href: '/reports', icon: BarChart3 },
-  { name: 'Users', href: '/users', icon: UserCog, adminOnly: true },
-  { name: 'Settings', href: '/settings', icon: Settings },
+  { name: 'Dashboard', href: '/app/dashboard', icon: LayoutDashboard },
+  { name: 'Applications', href: '/app/applications', icon: FileText, badge: 'pendingReviews' },
+  { name: 'Students', href: '/app/students', icon: Users },
+  { name: 'Payments', href: '/app/payments', icon: CreditCard },
+  { name: 'Academic Schools', href: '/app/schools', icon: School },
+  { name: 'Programs', href: '/app/programs', icon: BookOpen },
+  { name: 'Communications', href: '/app/communications', icon: Mail },
+  { name: 'Reports', href: '/app/reports', icon: BarChart3 },
+  { name: 'Users', href: '/app/users', icon: UserCog, adminOnly: true },
+  { name: 'Settings', href: '/app/settings', icon: Settings },
 ];
 
 export function Sidebar() {

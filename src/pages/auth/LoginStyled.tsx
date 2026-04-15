@@ -16,7 +16,7 @@ export function Login() {
     clearError();
     try {
       await login(email, password);
-      navigate('/dashboard');
+      navigate('/app/dashboard');
     } catch {
       // Error is handled by the store
     }
@@ -63,7 +63,6 @@ export function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  placeholder="admin@example.com"
                   required
                 />
               </div>
