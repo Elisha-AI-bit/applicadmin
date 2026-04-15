@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { 
   GraduationCap, 
   Users, 
@@ -11,6 +12,7 @@ import {
 } from 'lucide-react'
 
 const LandingPage = () => {
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
 
   const features = [
@@ -94,8 +96,8 @@ const LandingPage = () => {
               <a href="#contact" className="text-muted-foreground hover:text-primary transition-colors">Contact</a>
             </nav>
             <div className="flex items-center gap-4">
-              <button className="btn btn-secondary">Sign In</button>
-              <button className="btn btn-primary">Get Started</button>
+              <button onClick={() => navigate('/auth/login')} className="btn btn-secondary">Sign In</button>
+              <button onClick={() => navigate('/app/dashboard')} className="btn btn-primary">Get Started</button>
             </div>
           </div>
         </div>

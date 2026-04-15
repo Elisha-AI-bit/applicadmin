@@ -111,10 +111,11 @@ const getMockData = (collectionName: string, docId?: string) => {
         return [
           {
             id: '1',
+            transactionId: '#EnHwhfgH',
             applicationId: '1',
             studentId: '1',
             studentName: 'John Doe',
-            amount: 50,
+            amount: 50000,
             currency: 'ZMW',
             method: 'credit_card',
             status: 'pending',
@@ -122,15 +123,54 @@ const getMockData = (collectionName: string, docId?: string) => {
           },
           {
             id: '2',
+            transactionId: '#TX8KL9pQ',
             applicationId: '2',
             studentId: '2',
             studentName: 'Jane Smith',
-            amount: 75,
+            amount: 75000,
             currency: 'ZMW',
-            method: 'paypal',
+            method: 'mobile_money',
             status: 'completed',
             paidAt: new Date(Date.now() - 86400000).toISOString(),
             createdAt: new Date(Date.now() - 86400000).toISOString()
+          },
+          {
+            id: '3',
+            transactionId: '#BX5MN2jR',
+            applicationId: '3',
+            studentId: '3',
+            studentName: 'Alice Johnson',
+            amount: 60000,
+            currency: 'ZMW',
+            method: 'bank_transfer',
+            status: 'completed',
+            paidAt: new Date(Date.now() - 172800000).toISOString(),
+            createdAt: new Date(Date.now() - 172800000).toISOString()
+          },
+          {
+            id: '4',
+            transactionId: '#CW3LP8vS',
+            applicationId: '4',
+            studentId: '4',
+            studentName: 'Bob Wilson',
+            amount: 50000,
+            currency: 'ZMW',
+            method: 'credit_card',
+            status: 'completed',
+            paidAt: new Date(Date.now() - 259200000).toISOString(),
+            createdAt: new Date(Date.now() - 259200000).toISOString()
+          },
+          {
+            id: '5',
+            transactionId: '#DY7QS6wT',
+            applicationId: '5',
+            studentId: '5',
+            studentName: 'Carol Davis',
+            amount: 80000,
+            currency: 'ZMW',
+            method: 'mobile_money',
+            status: 'pending',
+            createdAt: new Date(Date.now() - 345600000).toISOString()
           }
         ];
       case 'activities':
