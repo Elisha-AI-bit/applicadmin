@@ -34,14 +34,14 @@ export function UsersList() {
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Users</h1>
-          <p className="text-muted-foreground mt-1 text-lg">Manage admin users and permissions</p>
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-transparent">Users</h1>
+          <p className="text-muted-foreground text-lg">Manage admin users and permissions</p>
         </div>
-        <Button className="hover-lift" onClick={() => navigate('/users/new')}>
-          <Plus className="mr-2 h-4 w-4" />
+        <Button onClick={() => navigate('/users/new')} className="shadow-md hover:shadow-lg transition-all group">
+          <Plus className="mr-2 h-4 w-4 group-hover:rotate-90 transition-transform duration-300" />
           Add User
         </Button>
       </div>

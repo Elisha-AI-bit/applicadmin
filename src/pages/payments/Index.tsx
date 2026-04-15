@@ -70,59 +70,76 @@ export function PaymentsList() {
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Payments</h1>
-          <p className="text-muted-foreground">Manage and track all payments</p>
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-transparent">Payments</h1>
+          <p className="text-muted-foreground text-lg">Manage and track all payments</p>
         </div>
-        <Button variant="outline">
-          <Download className="mr-2 h-4 w-4" />
+        <Button variant="outline" className="group hover:border-primary/50 transition-colors shadow-sm">
+          <Download className="mr-2 h-4 w-4 group-hover:-translate-y-0.5 transition-transform" />
           Export
         </Button>
       </div>
 
       {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
+      <div className="grid gap-6 md:grid-cols-3">
+        <Card className="hover-lift border-primary/10 bg-gradient-to-br from-card to-blue-50/50 shadow-sm overflow-hidden relative group">
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-400 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-            <DollarSign className="h-4 w-4 text-green-500" />
+            <CardTitle className="text-sm font-semibold text-muted-foreground">Total Revenue</CardTitle>
+            <div className="p-2 bg-blue-100 rounded-full dark:bg-blue-900/40">
+              <DollarSign className="h-4 w-4 text-primary" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(totalRevenue)}</div>
+            <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">{formatCurrency(totalRevenue)}</div>
+            <p className="text-xs text-muted-foreground mt-1 font-medium">All completed transactions</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="hover-lift border-yellow-500/10 bg-gradient-to-br from-card to-yellow-50/50 shadow-sm overflow-hidden relative group">
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-yellow-400 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending</CardTitle>
-            <CreditCard className="h-4 w-4 text-yellow-500" />
+            <CardTitle className="text-sm font-semibold text-muted-foreground">Pending</CardTitle>
+            <div className="p-2 bg-yellow-100 rounded-full dark:bg-yellow-900/40">
+              <CreditCard className="h-4 w-4 text-yellow-600 dark:text-yellow-500" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(pendingAmount)}</div>
+            <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">{formatCurrency(pendingAmount)}</div>
+            <p className="text-xs text-muted-foreground mt-1 font-medium">Awaiting payment</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="hover-lift border-slate-500/10 bg-gradient-to-br from-card to-slate-50/50 shadow-sm overflow-hidden relative group">
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-slate-400 to-slate-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Transactions</CardTitle>
-            <CreditCard className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-semibold text-muted-foreground">Transactions</CardTitle>
+            <div className="p-2 bg-slate-100 rounded-full dark:bg-slate-800/40">
+              <CreditCard className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{payments?.length || 0}</div>
+            <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">{payments?.length || 0}</div>
+            <p className="text-xs text-muted-foreground mt-1 font-medium">Total records</p>
           </CardContent>
         </Card>
       </div>
 
-      <Card>
+      <Card className="border-none shadow-lg bg-card/50 backdrop-blur-sm overflow-hidden mb-6">
+        <CardHeader className="pb-4 border-b bg-muted/20">
+          <div className="font-semibold text-muted-foreground">Filters</div>
+        </CardHeader>
         <CardContent className="pt-6">
           <div className="flex flex-col gap-4 md:flex-row">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <div className="relative flex-1 group">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              </div>
               <Input
                 placeholder="Search by student name..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="pl-10 h-11 bg-background/50 border-muted-foreground/20 focus-visible:ring-primary/30 transition-all rounded-full shadow-inner"
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -155,11 +172,11 @@ export function PaymentsList() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="border-none shadow-lg bg-card/50 backdrop-blur-sm overflow-hidden">
         <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Transaction ID</TableHead>
+          <TableHeader className="bg-muted/30">
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="pl-6 font-semibold">Transaction ID</TableHead>
               <TableHead>Student</TableHead>
               <TableHead>Amount</TableHead>
               <TableHead>Method</TableHead>
@@ -185,22 +202,27 @@ export function PaymentsList() {
               </TableRow>
             ) : (
               filteredPayments.map((payment) => (
-                <TableRow key={payment.id}>
-                  <TableCell className="font-medium">#{payment.id}</TableCell>
-                  <TableCell>{payment.studentName}</TableCell>
-                  <TableCell>{formatCurrency(payment.amount)}</TableCell>
+                <TableRow 
+                  key={payment.id}
+                  onClick={() => navigate(`/payments/${payment.id}`)}
+                  className="group cursor-pointer hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors border-b-muted/50"
+                >
+                  <TableCell className="font-medium pl-6 text-primary">#{payment.id.substring(0, 8)}</TableCell>
+                  <TableCell className="font-semibold group-hover:text-primary transition-colors">{payment.studentName}</TableCell>
+                  <TableCell className="font-medium">{formatCurrency(payment.amount)}</TableCell>
                   <TableCell className="capitalize">{payment.method.replace('_', ' ')}</TableCell>
                   <TableCell>
-                    <Badge className={getStatusColor(payment.status)}>
+                    <Badge className={`${getStatusColor(payment.status)} shadow-sm`}>
                       {payment.status}
                     </Badge>
                   </TableCell>
-                  <TableCell>{formatDate(payment.createdAt)}</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-muted-foreground text-sm font-medium">{formatDate(payment.createdAt)}</TableCell>
+                  <TableCell className="text-right pr-6">
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => navigate(`/payments/${payment.id}`)}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0 bg-primary/5 hover:bg-primary text-primary hover:text-primary-foreground shadow-sm"
+                      onClick={(e) => { e.stopPropagation(); navigate(`/payments/${payment.id}`); }}
                     >
                       <Eye className="mr-2 h-4 w-4" />
                       View

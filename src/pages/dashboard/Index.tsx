@@ -116,10 +116,12 @@ export function Dashboard() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Dashboard</h1>
-        <p className="text-muted-foreground mt-1 text-lg">Overview of your school application management system</p>
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-8">
+      <div className="space-y-1">
+        <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-transparent">
+          Dashboard
+        </h1>
+        <p className="text-muted-foreground text-lg">Overview of your school application management system</p>
       </div>
 
       {/* KPI Cards */}
@@ -279,8 +281,8 @@ export function Dashboard() {
       </div>
 
       {/* Recent Activity */}
-      <Card className="shadow-sm border-border/40">
-        <CardHeader className="flex flex-row items-center justify-between border-b border-border/40 bg-muted/10 pb-4">
+      <Card className="border-none shadow-lg bg-card/50 backdrop-blur-sm overflow-hidden">
+        <CardHeader className="flex flex-row items-center justify-between border-b bg-muted/20 pb-4">
           <div>
             <CardTitle className="text-lg">Recent Activity</CardTitle>
             <CardDescription>Latest actions and updates</CardDescription>

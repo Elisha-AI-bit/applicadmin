@@ -36,41 +36,42 @@ export function Settings() {
   ];
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground">Manage your account and application settings</p>
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-8">
+      <div className="space-y-1">
+        <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-transparent">Settings</h1>
+        <p className="text-muted-foreground text-lg">Manage your account and application settings</p>
       </div>
 
       <div className="grid gap-4">
         {settingsGroups.map((group) => (
           <Card
             key={group.title}
-            className="hover:shadow-md transition-shadow cursor-pointer"
+            className="group border-none shadow-md hover:shadow-xl hover:-translate-y-1 bg-card/50 backdrop-blur-sm transition-all duration-300 overflow-hidden cursor-pointer relative"
             onClick={() => navigate(group.href)}
           >
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary/20 to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
             <CardHeader className="flex flex-row items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                  <group.icon className="h-5 w-5 text-primary" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors shadow-inner group-hover:scale-105">
+                  <group.icon className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <CardTitle className="text-lg">{group.title}</CardTitle>
-                  <CardDescription>{group.description}</CardDescription>
+                  <CardTitle className="text-xl group-hover:text-primary transition-colors">{group.title}</CardTitle>
+                  <CardDescription className="text-sm mt-1">{group.description}</CardDescription>
                 </div>
               </div>
-              <ChevronRight className="h-5 w-5 text-muted-foreground" />
+              <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:translate-x-1 group-hover:text-primary transition-all" />
             </CardHeader>
           </Card>
         ))}
       </div>
 
-      <Card>
-        <CardHeader>
+      <Card className="border-none shadow-lg bg-card/50 backdrop-blur-sm overflow-hidden mt-8">
+        <CardHeader className="border-b bg-muted/20 pb-4">
           <CardTitle>General Settings</CardTitle>
           <CardDescription>Application-wide preferences</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-6 pt-6">
           <div className="flex items-center justify-between">
             <div>
               <Label>Email Notifications</Label>

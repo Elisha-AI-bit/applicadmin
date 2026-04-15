@@ -94,6 +94,9 @@ export function ApplicationDetail() {
             <p className="text-muted-foreground">
               Submitted on {formatDate(application.submittedAt)}
             </p>
+            <pre className="text-xs bg-gray-100 p-4 max-h-40 overflow-auto w-full">
+              {JSON.stringify(application, null, 2)}
+            </pre>
           </div>
         </div>
         <div className="flex gap-2">
@@ -149,23 +152,23 @@ export function ApplicationDetail() {
                   <CardContent className="space-y-3">
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Full Name</span>
-                      <span className="font-semibold">{application.personalInfo?.firstName} {application.personalInfo?.lastName}</span>
+                      <span className="font-semibold">{application.personalInfo?.firstName || application.studentName} {application.personalInfo?.lastName}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Gender</span>
-                      <span className="font-semibold">{application.personalInfo?.gender}</span>
+                      <span className="font-semibold">{application.personalInfo?.gender || '-'}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">ID / Passport</span>
-                      <span className="font-semibold">{application.personalInfo?.nrcPassport}</span>
+                      <span className="font-semibold">{application.personalInfo?.nrcPassport || '-'}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Nationality</span>
-                      <span className="font-semibold">{application.personalInfo?.nationality}</span>
+                      <span className="font-semibold">{application.personalInfo?.nationality || '-'}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Status</span>
-                      <span className="font-semibold">{application.personalInfo?.maritalStatus}</span>
+                      <span className="font-semibold">{application.personalInfo?.maritalStatus || '-'}</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -178,11 +181,11 @@ export function ApplicationDetail() {
                   <CardContent className="space-y-3">
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Email</span>
-                      <span className="font-semibold">{application.contactInfo?.email}</span>
+                      <span className="font-semibold">{application.contactInfo?.email || application.studentEmail}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Phone</span>
-                      <span className="font-semibold">{application.contactInfo?.phoneNumber}</span>
+                      <span className="font-semibold">{application.contactInfo?.phoneNumber || '-'}</span>
                     </div>
                     <div className="space-y-1 mt-2 border-t pt-2">
                       <span className="text-xs text-muted-foreground">Residential Address</span>
@@ -203,8 +206,8 @@ export function ApplicationDetail() {
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-1">
                       <Label className="text-xs text-muted-foreground">Selected Programme</Label>
-                      <p className="font-bold">{application.programmeChoice?.faculty} - {application.programmeChoice?.programmeName}</p>
-                      <p className="text-sm uppercase text-primary font-bold">{application.programmeChoice?.intake} Intake ({application.programmeChoice?.modeOfStudy})</p>
+                      <p className="font-bold">{application.programmeChoice?.faculty || application.schoolName} - {application.programmeChoice?.programmeName || application.programName}</p>
+                      <p className="text-sm uppercase text-primary font-bold">{application.programmeChoice?.intake || 'Current'} Intake ({application.programmeChoice?.modeOfStudy || 'Full Time'})</p>
                     </div>
                     <div className="space-y-1">
                       <Label className="text-xs text-muted-foreground">Previous Institution</Label>
@@ -235,11 +238,11 @@ export function ApplicationDetail() {
                   <CardDescription>Documents uploaded by the student</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {application.documents.length === 0 ? (
+                  {!(application.documents && application.documents.length > 0) ? (
                     <p className="text-center text-muted-foreground py-8">No documents uploaded</p>
                   ) : (
                     <div className="space-y-2">
-                      {application.documents.map((doc) => (
+                      {application.documents.map((doc: any) => (
                         <div
                           key={doc.id}
                           className="flex items-center justify-between rounded-lg border p-4"
@@ -299,7 +302,7 @@ export function ApplicationDetail() {
                   </div>
                   <Separator />
                   <div className="space-y-4">
-                    {application.notes.length === 0 ? (
+                    {!(application.notes && application.notes.length > 0) ? (
                       <p className="text-center text-muted-foreground py-4">No notes yet</p>
                     ) : (
                       application.notes.map((n) => (
@@ -334,8 +337,8 @@ export function ApplicationDetail() {
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Status</span>
-                <Badge className={getStatusColor(application.paymentStatus)}>
-                  {application.paymentStatus}
+                <Badge className={getStatusColor(application.paymentStatus || 'pending')}>
+                  {application.paymentStatus || 'pending'}
                 </Badge>
               </div>
             </CardContent>

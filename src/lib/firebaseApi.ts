@@ -255,6 +255,71 @@ export const studentsApi = {
   }
 };
 
+// Helper to map snake_case Firestore data (from Flutter) to camelCase React models
+const mapApplicationData = (id: string, rawData: any): Application => {
+  const data = convertTimestamps(rawData);
+  return {
+    id,
+    userId: data.user_id || data.userId,
+    applicationId: data.application_id || data.applicationId,
+    studentName: data.studentName,
+    studentEmail: data.studentEmail,
+    studentPhone: data.studentPhone,
+    schoolName: data.schoolName,
+    schoolId: data.schoolId,
+    studentId: data.studentId,
+    programId: data.programId,
+    programName: data.programName,
+    status: data.status || 'pending',
+    paymentStatus: data.payment_status || data.paymentStatus || 'pending',
+    paymentAmount: data.paymentAmount || 0,
+    documents: (data.documents || []).map((d: any) => ({
+      id: d.id || Math.random().toString(36).substr(2, 9),
+      name: d.file_name || d.name,
+      type: d.type,
+      url: d.download_url || d.url,
+      verified: d.verified,
+      uploadedAt: d.upload_date || d.uploadedAt
+    })),
+    submittedAt: data.created_at || data.submittedAt || data.createdAt || new Date().toISOString(),
+    reviewedAt: data.reviewedAt,
+    reviewedBy: data.reviewedBy,
+    notes: data.notes || [],
+    source: data.source || 'mobile_app',
+    
+    personalInfo: {
+      firstName: data.personal_info?.first_name || data.personalInfo?.firstName,
+      lastName: data.personal_info?.last_name || data.personalInfo?.lastName,
+      dob: data.personal_info?.dob || data.personalInfo?.dob,
+      gender: data.personal_info?.gender || data.personalInfo?.gender,
+      nationality: data.personal_info?.nationality || data.personalInfo?.nationality,
+      nrcPassport: data.personal_info?.nrc_passport || data.personalInfo?.nrcPassport,
+      maritalStatus: data.personal_info?.marital_status || data.personalInfo?.maritalStatus,
+    },
+    contactInfo: {
+      phoneNumber: data.contact_info?.phone_number || data.contactInfo?.phoneNumber,
+      email: data.contact_info?.email || data.contactInfo?.email,
+      address: data.contact_info?.address || data.contactInfo?.address,
+      city: data.contact_info?.city || data.contactInfo?.city,
+      province: data.contact_info?.province || data.contactInfo?.province,
+      country: data.contact_info?.country || data.contactInfo?.country,
+    },
+    academicInfo: {
+      schoolName: data.academic_info?.school_name || data.academicInfo?.schoolName,
+      examLevel: data.academic_info?.exam_level || data.academicInfo?.examLevel,
+      completionYear: data.academic_info?.completion_year || data.academicInfo?.completionYear,
+      certificateNumber: data.academic_info?.certificate_number || data.academicInfo?.certificateNumber,
+      grades: data.academic_info?.grades || data.academicInfo?.grades || [],
+    },
+    programmeChoice: {
+      faculty: data.programme_choice?.school_name || data.programmeChoice?.faculty,
+      programmeName: data.programme_choice?.programme_name || data.programmeChoice?.programmeName,
+      modeOfStudy: data.programme_choice?.mode_of_study || data.programmeChoice?.modeOfStudy,
+      intake: data.programme_choice?.intake || data.programmeChoice?.intake,
+    },
+  } as Application;
+};
+
 // Applications API
 export const applicationsApi = {
   getApplications: async (filters?: {
@@ -275,10 +340,7 @@ export const applicationsApi = {
     }
     
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...convertTimestamps(doc.data())
-    })) as Application[];
+    return querySnapshot.docs.map(doc => mapApplicationData(doc.id, doc.data()));
   },
 
   subscribeToApplications: (callback: (applications: Application[]) => void, filters?: {
@@ -296,10 +358,7 @@ export const applicationsApi = {
     }
     
     return onSnapshot(q, (querySnapshot) => {
-      const applications = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...convertTimestamps(doc.data())
-      })) as Application[];
+      const applications = querySnapshot.docs.map(doc => mapApplicationData(doc.id, doc.data()));
       callback(applications);
     });
   },
@@ -309,10 +368,7 @@ export const applicationsApi = {
     const docSnap = await getDoc(docRef);
     
     if (docSnap.exists()) {
-      return {
-        id: docSnap.id,
-        ...convertTimestamps(docSnap.data())
-      } as Application;
+      return mapApplicationData(docSnap.id, docSnap.data());
     }
     return null;
   },

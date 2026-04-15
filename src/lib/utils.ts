@@ -5,13 +5,27 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatDate(date: string | Date): string {
-  const d = new Date(date)
+export function formatDate(date: any): string {
+  if (!date) return '—';
+  
+  let d: Date;
+  
+  // Handle Firestore Timestamp
+  if (typeof date === 'object' && 'toDate' in date && typeof date.toDate === 'function') {
+    d = date.toDate();
+  } else if (typeof date === 'object' && 'seconds' in date) {
+    d = new Date(date.seconds * 1000);
+  } else {
+    d = new Date(date);
+  }
+  
+  if (isNaN(d.getTime())) return 'Invalid Date';
+  
   return d.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
-  })
+  });
 }
 
 export function formatCurrency(amount: number): string {
@@ -39,7 +53,9 @@ export function getInitials(firstName?: string, lastName?: string): string {
   return firstName.charAt(0).toUpperCase()
 }
 
-export function getStatusColor(status: string): string {
+export function getStatusColor(status?: string | null): string {
+  if (!status) return "bg-gray-100 text-gray-800"
+
   const statusColors: Record<string, string> = {
     pending: "bg-yellow-100 text-yellow-800",
     approved: "bg-green-100 text-green-800",

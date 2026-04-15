@@ -44,20 +44,19 @@ export function ApplicationsList() {
 
   // Filter applications based on search query (client-side filtering for demo)
   const filteredApplications = applications.filter(app => {
-    const firstName = app.personalInfo?.firstName?.toLowerCase() || '';
-    const lastName = app.personalInfo?.lastName?.toLowerCase() || '';
-    const email = app.contactInfo?.email?.toLowerCase() || '';
-    const school = app.programmeChoice?.faculty?.toLowerCase() || '';
-    const program = app.programmeChoice?.programmeName?.toLowerCase() || '';
+    const studentName = (app.studentName || '').toLowerCase();
+    const email = (app.studentEmail || '').toLowerCase();
+    const school = (app.schoolName || '').toLowerCase();
+    const program = (app.programName || '').toLowerCase();
+    const appId = (app.id || '').toLowerCase();
     const query = searchQuery.toLowerCase();
 
     return (
-      firstName.includes(query) ||
-      lastName.includes(query) ||
+      studentName.includes(query) ||
       email.includes(query) ||
       school.includes(query) ||
       program.includes(query) ||
-      app.applicationId.toLowerCase().includes(query)
+      appId.includes(query)
     );
   });
 
@@ -72,31 +71,33 @@ export function ApplicationsList() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Applications</h1>
-          <p className="text-muted-foreground">Manage and review student applications</p>
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-transparent">Applications</h1>
+          <p className="text-muted-foreground text-lg">Manage and review student applications</p>
         </div>
-        <Button variant="outline">
-          <Download className="mr-2 h-4 w-4" />
+        <Button variant="outline" className="group hover:border-primary/50 transition-colors shadow-sm">
+          <Download className="mr-2 h-4 w-4 group-hover:-translate-y-0.5 transition-transform" />
           Export
         </Button>
       </div>
 
-      <Card>
-        <CardHeader className="pb-3">
+      <Card className="border-none shadow-lg bg-card/50 backdrop-blur-sm overflow-hidden mb-6">
+        <CardHeader className="pb-4 border-b bg-muted/20">
           <CardTitle>Filters</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <div className="flex flex-col gap-4 md:flex-row">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <div className="relative flex-1 group">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              </div>
               <Input
                 placeholder="Search by student name, email, or school..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="pl-10 h-11 bg-background/50 border-muted-foreground/20 focus-visible:ring-primary/30 transition-all rounded-full shadow-inner"
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -116,11 +117,11 @@ export function ApplicationsList() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="border-none shadow-lg bg-card/50 backdrop-blur-sm overflow-hidden">
         <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Student</TableHead>
+          <TableHeader className="bg-muted/30">
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="pl-6 font-semibold">Student</TableHead>
               <TableHead>School / Program</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Payment</TableHead>
@@ -145,18 +146,22 @@ export function ApplicationsList() {
               </TableRow>
             ) : (
               filteredApplications.map((app) => (
-                <TableRow key={app.id}>
-                  <TableCell>
+                <TableRow 
+                  key={app.id}
+                  onClick={() => navigate(`/applications/${app.id}`)}
+                  className="group cursor-pointer hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors border-b-muted/50"
+                >
+                  <TableCell className="pl-6">
                     <div>
-                      <p className="font-medium">{app.personalInfo?.firstName} {app.personalInfo?.lastName}</p>
-                      <p className="text-sm text-muted-foreground">{app.contactInfo?.email}</p>
-                      <p className="text-xs text-primary font-mono font-bold mt-1">#{app.applicationId}</p>
+                      <p className="font-medium">{app.studentName}</p>
+                      <p className="text-sm text-muted-foreground">{app.studentEmail}</p>
+                      <p className="text-xs text-primary font-mono font-bold mt-1">#{app.id}</p>
                     </div>
                   </TableCell>
                   <TableCell>
                     <div>
-                      <p className="font-medium">{app.programmeChoice?.faculty}</p>
-                      <p className="text-sm text-muted-foreground">{app.programmeChoice?.programmeName}</p>
+                      <p className="font-medium">{app.schoolName}</p>
+                      <p className="text-sm text-muted-foreground">{app.programName}</p>
                     </div>
                   </TableCell>
                   <TableCell>
@@ -165,16 +170,20 @@ export function ApplicationsList() {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Badge className={getPaymentBadgeColor(app.paymentStatus)}>
-                      {app.paymentStatus}
+                    <Badge className={getPaymentBadgeColor(app.paymentStatus || 'pending')}>
+                      {app.paymentStatus || 'pending'}
                     </Badge>
                   </TableCell>
-                  <TableCell>{formatDate(app.submittedAt)}</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell>{formatDate(app.submittedAt || (app as any).createdAt)}</TableCell>
+                  <TableCell className="text-right pr-6">
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => navigate(`/applications/${app.id}`)}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0 bg-primary/5 hover:bg-primary text-primary hover:text-primary-foreground shadow-sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/applications/${app.id}`);
+                      }}
                     >
                       <Eye className="mr-2 h-4 w-4" />
                       View
