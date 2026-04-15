@@ -45,8 +45,8 @@ const COLORS = ['#3B82F6', '#8B5CF6', '#10B981', '#EF4444', '#F59E0B'];
 
 export function Dashboard() {
   // Real-time subscriptions
-  const { data: applications = [] } = useRealtimeApplications();
-  const { data: payments = [] } = useRealtimePayments();
+  const { data: applications = [], isLoading: applicationsLoading } = useRealtimeApplications();
+  const { data: payments = [], isLoading: paymentsLoading } = useRealtimePayments();
   const { data: activities = [] } = useRealtimeActivities(5);
   
   const [loading, setLoading] = useState(true);
@@ -88,6 +88,17 @@ export function Dashboard() {
       }
     });
 
+    const revenueTrendByMonth: Record<string, number> = {};
+    payments.forEach((p: any) => {
+      const dateValue = p.paidAt || p.createdAt || p.submittedAt;
+      if (!dateValue) return;
+      const date = new Date(dateValue);
+      const period = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+      if (p.status === 'completed') {
+        revenueTrendByMonth[period] = (revenueTrendByMonth[period] || 0) + Number(p.amount || 0);
+      }
+    });
+
     return {
       totalApplications,
       pendingReviews,
@@ -103,7 +114,9 @@ export function Dashboard() {
         status: status.replace('_', ' '), 
         count 
       })),
-      revenueTrend: [], // Simplified
+      revenueTrend: Object.entries(revenueTrendByMonth)
+        .map(([period, amount]) => ({ period, amount }))
+        .sort((a, b) => new Date(a.period).getTime() - new Date(b.period).getTime()),
       applicationsBySchool: Object.entries(schoolCounts)
         .map(([school, count]) => ({ school, count }))
         .sort((a, b) => b.count - a.count)
@@ -114,11 +127,11 @@ export function Dashboard() {
 
   // Update stats when data changes
   useEffect(() => {
-    if (applications.length > 0 || payments.length > 0) {
+    if (!applicationsLoading && !paymentsLoading) {
       setStats(calculateStats());
       setLoading(false);
     }
-  }, [applications, payments]);
+  }, [applications, payments, applicationsLoading, paymentsLoading]);
 
   if (loading) {
     return (

@@ -42,8 +42,8 @@ export function Sidebar() {
   const sidebarCollapsed = !sidebarOpen;
 
   const isActive = (href: string) => {
-    if (href === '/dashboard') {
-      return location.pathname === '/dashboard';
+    if (href === '/app/dashboard') {
+      return location.pathname === '/app/dashboard';
     }
     return location.pathname.startsWith(href);
   };

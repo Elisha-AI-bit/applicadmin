@@ -27,7 +27,7 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
     const hasRole = user?.role === requiredRole;
 
     if (!isAdmin && !hasRole) {
-      return <Navigate to="/dashboard" replace />;
+      return <Navigate to="/app/dashboard" replace />;
     }
   }
 

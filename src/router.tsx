@@ -141,27 +141,11 @@ export const router = createBrowserRouter([
       },
       {
         path: 'users',
-        element: (
-          <ProtectedRoute requiredRole="admin">
-            <UsersList />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: 'users/new',
-        element: (
-          <ProtectedRoute requiredRole="admin">
-            <CreateUser />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: 'users/:id/edit',
-        element: (
-          <ProtectedRoute requiredRole="admin">
-            <EditUser />
-          </ProtectedRoute>
-        ),
+        children: [
+          { index: true, element: <ProtectedRoute requiredRole="admin"><UsersList /></ProtectedRoute> },
+          { path: 'new', element: <ProtectedRoute requiredRole="admin"><CreateUser /></ProtectedRoute> },
+          { path: ':id/edit', element: <ProtectedRoute requiredRole="admin"><EditUser /></ProtectedRoute> },
+        ],
       },
       {
         path: 'settings',
